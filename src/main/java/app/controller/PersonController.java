@@ -6,7 +6,7 @@ import app.Color;
 import app.Country;
 import app.requestDto.PersonRequestDto;
 import app.responseDto.PersonResponseDto;
-
+import app.websocket.WebSocket;
 import javax.ejb.EJBException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -30,6 +30,7 @@ public class PersonController {
     public Response addPerson(@Valid PersonRequestDto dto) {
         try {
             PersonResponseDto person = personService.addPerson(dto);
+            WebSocket.broadcast("person");
             return Response.ok(person).build();
         } catch (EJBException e) {
             if (e.getCause() instanceof IllegalArgumentException cause) {
@@ -96,6 +97,7 @@ public class PersonController {
     public Response updatePerson(@PathParam("id") Long id, @Valid PersonRequestDto dto) {
         try {
             PersonResponseDto person = personService.updatePerson(id, dto);
+            WebSocket.broadcast("person");
             return Response.ok(person).build();
         } catch (EJBException e) {
             if (e.getCause() instanceof IllegalArgumentException cause) {
@@ -114,6 +116,7 @@ public class PersonController {
     public Response deletePerson(@PathParam("id") Long id) {
         try {
             personService.deletePerson(id);
+            WebSocket.broadcast("person");
             return Response.status(Response.Status.OK).build();
         } catch (EJBException e) {
             if (e.getCause() instanceof IllegalArgumentException cause) {

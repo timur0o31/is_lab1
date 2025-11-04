@@ -3,6 +3,7 @@ package app.controller;
 import app.service.OrganizationService;
 import app.requestDto.OrganizationRequestDto;
 import app.responseDto.OrganizationResponseDto;
+import app.websocket.WebSocket;
 
 import javax.ejb.EJBException;
 import javax.enterprise.context.ApplicationScoped;
@@ -28,6 +29,7 @@ public class OrganizationController {
     public Response addOrganization(@Valid OrganizationRequestDto dto) {
         try {
             OrganizationResponseDto organization = organizationService.createOrganization(dto);
+            WebSocket.broadcast("organization");
             return Response.ok(organization).build();
         } catch (ConstraintViolationException e) {
             return Response.status(Response.Status.BAD_REQUEST)
@@ -109,6 +111,7 @@ public class OrganizationController {
     public Response updateOrganization(@PathParam("id") Long id, @Valid OrganizationRequestDto dto) {
         try {
             OrganizationResponseDto organization = organizationService.updateOrganization(id, dto);
+            WebSocket.broadcast("organization");
             return Response.ok(organization).build();
         } catch (EJBException e) {
             if (e.getCause() instanceof IllegalArgumentException cause) {
@@ -123,9 +126,10 @@ public class OrganizationController {
     }
 
     @DELETE
-    @Path("/{id}/{newOrgId}")
-    public Response deleteOrganization(@PathParam("id") Long id, @PathParam("newOrgId") Long newId) {
-        organizationService.deleteOrganization(id, newId);
+    @Path("/{id}")
+    public Response deleteOrganizationWithWorkers(@PathParam("id") Long id, @QueryParam("newOrgId") Long newId) {
+        organizationService.deleteOrganizationWithWorkers(id, newId);
+        WebSocket.broadcast("organization");
         return Response.status(Response.Status.OK).build();
     }
 

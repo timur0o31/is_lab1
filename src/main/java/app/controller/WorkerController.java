@@ -12,6 +12,7 @@ import app.service.WorkerService;
 import app.Position;
 import app.requestDto.WorkerRequestDto;
 import app.responseDto.WorkerResponseDto;
+import app.websocket.WebSocket;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
@@ -33,6 +34,7 @@ public class WorkerController {
     public Response createWorker(@Valid WorkerRequestDto dto) {
         try {
             WorkerResponseDto worker = workerService.createWorker(dto);
+            WebSocket.broadcast("worker");
             return Response.ok(worker).build();
         } catch (EJBException e) {
             if (e.getCause() instanceof IllegalArgumentException cause) {
@@ -96,6 +98,7 @@ public class WorkerController {
                                  @Valid WorkerRequestDto dto) {
         try {
             WorkerResponseDto updated = workerService.updateWorker(id, dto);
+            WebSocket.broadcast("worker");
             return Response.ok(updated).build();
         } catch (EJBException e) {
             Throwable cause = e.getCause();
@@ -121,6 +124,7 @@ public class WorkerController {
     @Path("/{id}")
     public Response deleteWorker(@PathParam("id") int id) {
         workerService.deleteWorker(id);
+        WebSocket.broadcast("worker");
         return Response.noContent().build();
     }
 

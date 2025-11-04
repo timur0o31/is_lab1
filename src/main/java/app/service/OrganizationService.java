@@ -35,7 +35,7 @@ public class OrganizationService {
     public Long countWorkers(Long id) {
         return organizationDao.countWorkers(id);
     }
-    public void deleteOrganization(Long id, Long transferToId) {
+    public void deleteOrganizationWithWorkers(Long id, Long transferToId) {
         Organization organization = organizationDao.find(id);
         if (organization == null) {
             throw new IllegalArgumentException("Organization not found");
