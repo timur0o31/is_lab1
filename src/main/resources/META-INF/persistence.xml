@@ -9,13 +9,13 @@
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <jta-data-source>java:/PostgresDS</jta-data-source>
         <non-jta-data-source>java:/PostgresDS</non-jta-data-source>
-        <class>app.dao.GenericDao</class>
-        <class>app.entities.Address</class>
-        <class>app.entities.Coordinates</class>
-        <class>app.entities.Location</class>
-        <class>app.entities.Organization</class>
-        <class>app.entities.Person</class>
-        <class>app.entities.Worker</class>
+        <class>ru.itmo.tim.dao.GenericDao</class>
+        <class>ru.itmo.tim.entity.Address</class>
+        <class>ru.itmo.tim.entity.Coordinates</class>
+        <class>ru.itmo.tim.entity.Location</class>
+        <class>ru.itmo.tim.entity.Organization</class>
+        <class>ru.itmo.tim.entity.Person</class>
+        <class>ru.itmo.tim.entity.Worker</class>
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
