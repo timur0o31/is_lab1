@@ -8,6 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.service.WorkerService;
 import ru.itmo.tim.enums.Position;
 import ru.itmo.tim.requestDto.WorkerRequestDto;
@@ -99,20 +100,7 @@ public class WorkerController {
             WorkerResponseDto updated = workerService.updateWorker(id, dto);
             WebSocket.broadcast("worker");
             return Response.ok(updated).build();
-        } catch (EJBException e) {
-            Throwable cause = e.getCause();
-            while (cause != null && !(cause instanceof IllegalArgumentException)) {
-                cause = cause.getCause();
-            }
-            if (cause instanceof IllegalArgumentException illegal) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Map.of("error", illegal.getMessage()))
-                        .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
-        }catch( IllegalArgumentException e){
+        } catch( IllegalArgumentException e){
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(Map.of("error",e.getMessage()))
                     .build();

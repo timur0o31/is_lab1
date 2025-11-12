@@ -19,7 +19,7 @@ public class Worker {
     private Integer id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
     @Column(nullable = false)
-    @NotBlank
+    @NotBlank(message="Поле для имени должно быть заполнено")
     private String name; //Поле не может быть null, Строка не может быть пустой
 
     @NotNull
@@ -30,20 +30,20 @@ public class Worker {
     @Column(name="creation_date")
     private LocalDate creationDate;  //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
-    @NotNull
+    @NotNull(message="Организация должна быть указана, не может быть null")
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonbTransient
     @JoinColumn(name="organization_id", nullable = false)
     private Organization organization;
 
-    @NotNull
+    @NotNull(message="Зарплата должна быть больше 0")
     @Positive
     private Float salary;
 
-    @Positive
+    @Positive(message="Рейтинг должен быть положителен")
     private int rating;
 
-    @NotNull
+    @NotNull(message="Дата начала работы не может быть null")
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
@@ -54,9 +54,9 @@ public class Worker {
     @Column(nullable = false)
     private Position position;
 
-    @NotNull
-    @OneToOne //? возможно стоит тут делать каскад cascade = CascadeType.ALL
-    @JoinColumn(name = "person_id", nullable = false)
+    @NotNull(message="Персона должна быть указана")
+    @OneToOne
+    @JoinColumn(name = "person_id", unique=true, nullable = false)
     private Person person;
     public Worker() {}
 

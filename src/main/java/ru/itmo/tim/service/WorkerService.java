@@ -2,6 +2,7 @@ package ru.itmo.tim.service;
 
 import ru.itmo.tim.dao.WorkerDao;
 import ru.itmo.tim.entity.Worker;
+import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.WorkerMapper;
 import ru.itmo.tim.requestDto.WorkerRequestDto;
 import ru.itmo.tim.responseDto.WorkerResponseDto;
@@ -31,17 +32,17 @@ public class WorkerService {
     }
 
     public WorkerResponseDto updateWorker(int id, WorkerRequestDto dto) {
-        Worker worker = workerDao.find(id);
-        if (worker == null) {
-            throw new IllegalArgumentException("Рабочего с таким id не существует");
-        }
-        if (workerDao.findByPersonId(dto.getPersonId()).getId() != worker.getId()){
-            throw new IllegalArgumentException("Персона с таким id уже связана с другим worker.");
-        }
-        workerMapper.toUpdateEntity(worker, dto);
-        this.resolveDependencies(dto, worker);
-        workerDao.update(worker);
-        return workerMapper.toResponseDto(worker);
+            Worker worker = workerDao.find(id);
+            if (worker == null) {
+                throw new DomainException("Рабочего с таким id не существует");
+            }
+            if (workerDao.findByPersonId(dto.getPersonId()).getId() != worker.getId()) {
+                throw new DomainException("Персона с таким id уже связана с другим worker.");
+            }
+            workerMapper.toUpdateEntity(worker, dto);
+            this.resolveDependencies(dto, worker);
+            workerDao.update(worker);
+            return workerMapper.toResponseDto(worker);
     }
 
     public void deleteWorker(int id) {

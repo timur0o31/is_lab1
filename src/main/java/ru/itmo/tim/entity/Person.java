@@ -23,7 +23,8 @@ public class Person {
     @Embedded
     private Location location; //Поле может быть null
 
-    @Size(min = 7)
+
+    @Size(min = 7, message ="строка не может быть пустой, длина строки должна быть больше 6")
     private String passportId; //Строка не может быть пустой, Длина строки должна быть не меньше 7, Поле может быть null
 
     @Enumerated(EnumType.STRING)

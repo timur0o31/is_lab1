@@ -1,4 +1,4 @@
-package ru.itmo.tim.utils;
+package ru.itmo.tim.exception;
 
 import javax.validation.ConstraintViolationException;
 import javax.ws.rs.core.MediaType;

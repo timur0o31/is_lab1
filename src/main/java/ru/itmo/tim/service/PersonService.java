@@ -8,8 +8,10 @@ import ru.itmo.tim.responseDto.PersonResponseDto;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import java.util.List;
 import java.util.Map;
+
 
 @Stateless
 public class PersonService {
@@ -21,9 +23,9 @@ public class PersonService {
     }
 
     public PersonResponseDto addPerson(PersonRequestDto personRequestDto) {
-        Person person = personMapper.toCreateEntity(personRequestDto);
-        personDao.save(person);
-        return personMapper.toResponseDto(person);
+            Person person = personMapper.toCreateEntity(personRequestDto);
+            personDao.save(person);
+            return personMapper.toResponseDto(person);
     }
 
     public PersonResponseDto updatePerson(Long id, PersonRequestDto personRequestDto) {
