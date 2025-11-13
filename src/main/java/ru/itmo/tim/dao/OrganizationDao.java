@@ -15,7 +15,7 @@ public class OrganizationDao extends GenericDao<Organization> {
     }
     public long countWorkers(Long orgId){
         return entityManager.createQuery(
-                        "SELECT COUNT(w) FROM Worker w WHERE w.organization.id = :id", Long.class)
+                "SELECT COUNT(w) FROM Worker w WHERE w.organization.id = :id", Long.class)
                 .setParameter("id", orgId)
                 .getSingleResult();
     }
@@ -25,17 +25,11 @@ public class OrganizationDao extends GenericDao<Organization> {
                 .getResultList();
     }
     public List<Organization> getAll(int page, int size, String sortColumn, boolean sortDirection, Map<String, Object> filters) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT org FROM Organization org WHERE 1=1");
-        queryBuilder.append(BuilderQueryForGetAll.buildWhereClause(filters, "org"));
-        if (sortColumn != null && !sortColumn.isEmpty()) {
-            queryBuilder.append(" ORDER BY org.").append(sortColumn);
-            queryBuilder.append(sortDirection ? " ASC" : " DESC");
-        }
-        TypedQuery<Organization> query = entityManager.createQuery(queryBuilder.toString(), Organization.class);
+        String queryBuilder = BuilderQueryForGetAll.buildQuery("o","Organization",filters,sortColumn,sortDirection);
+        TypedQuery<Organization> query = entityManager.createQuery(queryBuilder, Organization.class);
         BuilderQueryForGetAll.setQueryParameters(query,filters);
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
-
         return query.getResultList();
     }
     public long countAll(Map<String, Object> filters) {

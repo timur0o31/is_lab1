@@ -23,14 +23,9 @@ public class WorkerDao extends GenericDao<Worker> {
                 .setMaxResults(size)
                 .getResultList();
     }
-    public List<Worker> getAll(int page, int size, Map<String, Object> filters, String sortColumn, boolean asc) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT w FROM Worker w WHERE 1=1");
-        queryBuilder.append(BuilderQueryForGetAll.buildWhereClause(filters, "w"));
-        if (sortColumn != null && !sortColumn.isEmpty()) {
-            queryBuilder.append(" ORDER BY w.").append(sortColumn);
-            queryBuilder.append(asc ? " ASC" : " DESC");
-        }
-        TypedQuery<Worker> query = entityManager.createQuery(queryBuilder.toString(), Worker.class);
+    public List<Worker> getAll(int page, int size, Map<String, Object> filters, String sortColumn, boolean sortDirection) {
+        String queryBuilder = BuilderQueryForGetAll.buildQuery("w","Worker",filters,sortColumn,sortDirection);
+        TypedQuery<Worker> query = entityManager.createQuery(queryBuilder, Worker.class);
         BuilderQueryForGetAll.setQueryParameters(query,filters);
         query.setFirstResult((page - 1) * size);
         query.setMaxResults(size);
