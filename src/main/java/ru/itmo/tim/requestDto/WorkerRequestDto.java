@@ -11,23 +11,23 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class WorkerRequestDto {
-    @NotBlank
+    @NotBlank(message="Поле для имени должно быть заполнено")
     private String name;
     @NotNull
     @Valid
     private CoordinatesRequestDto coordinates;
-    @NotNull
+    @NotNull(message="Организация должна быть указана, не может быть null")
     private Long organizationId;
     @NotNull
-    @Positive
+    @Positive(message="Зарплата должна быть больше 0")
     private Float salary;
-    @Positive
+    @Positive(message="Рейтинг должен быть положителен")
     private int rating;
-    @NotNull
+
     private Position position;
-    @NotNull
+    @NotNull(message="Персона должна быть указана")
     private Long personId;
-    @NotNull
+    @NotNull(message="Дата начала работы не может быть null")
     private LocalDateTime startDate;
     private LocalDate endDate;
     public WorkerRequestDto() {}

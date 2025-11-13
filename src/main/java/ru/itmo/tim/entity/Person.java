@@ -24,7 +24,7 @@ public class Person {
     private Location location; //Поле может быть null
 
 
-    @Size(min = 7, message ="строка не может быть пустой, длина строки должна быть больше 6")
+    @Size(min = 7)
     private String passportId; //Строка не может быть пустой, Длина строки должна быть не меньше 7, Поле может быть null
 
     @Enumerated(EnumType.STRING)
@@ -53,11 +53,11 @@ public class Person {
         this.hairColor = hairColor;
     }
 
-    public @NotNull Location getLocation() {
+    public Location getLocation() {
         return location;
     }
 
-    public void setLocation(@NotNull Location location) {
+    public void setLocation( Location location) {
         this.location = location;
     }
 

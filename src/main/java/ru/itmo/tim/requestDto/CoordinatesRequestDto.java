@@ -4,9 +4,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 public class CoordinatesRequestDto {
-    @Max(255)
+    @Max(value = 255,message= "координата x не может быть больше 255")
     private long x;
-    @Min(-503)
+    @Min(value=-503, message = "координата y не может быть меньше -503")
     private int y;
     public CoordinatesRequestDto() {
 

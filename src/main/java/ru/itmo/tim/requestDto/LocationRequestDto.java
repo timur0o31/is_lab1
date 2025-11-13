@@ -1,21 +1,13 @@
 package ru.itmo.tim.requestDto;
 
 public class LocationRequestDto {
-    private String name;
-    private int x;
-    private int y;
-    private long z;
+    private Integer x;
+    private Integer y;
+    private Long z;
     public LocationRequestDto(){
 
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getX() {
         return x;

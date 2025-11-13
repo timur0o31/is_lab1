@@ -3,26 +3,16 @@ import javax.persistence.*;
 
 @Embeddable
 public class Location {
-    private int x;
-    private int y;
-    private long z;
+    private Integer x;
+    private Integer y;
+    private Long z;
     public Location() {
-
     }
-    public Location(int x, int y, long z, String name) {
-
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-
-
     public int getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         this.x = x;
     }
 
@@ -30,7 +20,7 @@ public class Location {
         return y;
     }
 
-    public void setY(int y) {
+    public void setY(Integer y) {
         this.y = y;
     }
 
@@ -38,7 +28,7 @@ public class Location {
         return z;
     }
 
-    public void setZ(long z) {
+    public void setZ(Long z) {
         this.z = z;
     }
 }

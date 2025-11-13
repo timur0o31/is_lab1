@@ -7,8 +7,8 @@ public class AddressRequestDto {
 
     private String street;
 
-    @Size(min = 4)
-    @NotNull
+    @Size(min = 4, message="длина почтового индекса должна быть больше 3")
+    @NotNull(message="Поле не может быть null")
     private String zipCode;
 
     public AddressRequestDto() {}

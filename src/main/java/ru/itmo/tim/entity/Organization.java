@@ -21,19 +21,19 @@ public class Organization {
     })
     private Address officialAddress; //Поле не может быть null
 
-    @Positive(message="годовой оборот должен быть больше 0")
+    @Positive
     private Float annualTurnover; //Поле может быть null, Значение поля должно быть больше 0
 
-    @Positive(message="количество работников должно быть больше 0")
+    @Positive
     private Long employeesCount; //Поле может быть null, Значение поля должно быть больше 0
 
     @NotNull
     @Column(nullable = false, length = 550)
-    @Size(max = 550, message="длина строки не может больше 550, поле не может быть null")
+    @Size(max = 550)
     private String fullName; //Длина строки не должна быть больше 550, Поле не может быть null
 
     @NotNull
-    @Positive(message="рейтинг не может быть null, должен быть положительным")
+    @Positive
     @Column(nullable = false)
     private Float rating; //Поле не может быть null, Значение поля должно быть больше 0
 

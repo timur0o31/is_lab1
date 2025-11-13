@@ -2,22 +2,12 @@ package ru.itmo.tim.responseDto;
 
 public class LocationResponseDto {
     private int id;
-    private String name;
-    private int x;
-    private int y;
-    private long z;
+    private Integer x;
+    private Integer y;
+    private Long z;
 
     public LocationResponseDto() {
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public int getId() {
         return id;
     }

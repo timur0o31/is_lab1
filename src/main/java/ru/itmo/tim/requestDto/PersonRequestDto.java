@@ -4,14 +4,15 @@ import ru.itmo.tim.enums.Color;
 import ru.itmo.tim.enums.Country;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class PersonRequestDto {
     private Color eyeColor;
     private Color hairColor;
     private LocationRequestDto location;
-    @NotNull
-    @Size(min = 7)
+    @Size(min = 7, message ="длина строки должна быть больше 6")
+    @Pattern(regexp=".*\\S.*", message="строка не может быть пустой или состоять только из пробелов")
     private String passportId;
     private Country nationality;
 

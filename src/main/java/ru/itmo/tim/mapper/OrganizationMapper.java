@@ -28,9 +28,6 @@ public class OrganizationMapper {
     }
 
     public Organization toCreateEntity(OrganizationRequestDto organizationRequestDto) {
-        if (organizationRequestDto.getAnnualTurnover() == null) {
-            return null;
-        }
         Organization organization = new Organization();
         organization.setAnnualTurnover(organizationRequestDto.getAnnualTurnover());
         organization.setEmployeesCount(organizationRequestDto.getEmployeesCount());

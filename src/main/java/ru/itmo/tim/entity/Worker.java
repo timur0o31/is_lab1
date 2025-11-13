@@ -19,7 +19,7 @@ public class Worker {
     private Integer id; //Значение поля должно быть больше 0, Значение этого поля должно быть уникальным, Значение этого поля должно генерироваться автоматически
 
     @Column(nullable = false)
-    @NotBlank(message="Поле для имени должно быть заполнено")
+    @NotBlank
     private String name; //Поле не может быть null, Строка не может быть пустой
 
     @NotNull
@@ -30,20 +30,20 @@ public class Worker {
     @Column(name="creation_date")
     private LocalDate creationDate;  //Поле не может быть null, Значение этого поля должно генерироваться автоматически
 
-    @NotNull(message="Организация должна быть указана, не может быть null")
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonbTransient
     @JoinColumn(name="organization_id", nullable = false)
     private Organization organization;
 
-    @NotNull(message="Зарплата должна быть больше 0")
+    @NotNull
     @Positive
     private Float salary;
 
-    @Positive(message="Рейтинг должен быть положителен")
+    @Positive
     private int rating;
 
-    @NotNull(message="Дата начала работы не может быть null")
+    @NotNull
     @Column(name = "start_date")
     private LocalDateTime startDate;
 
@@ -51,10 +51,10 @@ public class Worker {
     private LocalDate endDate;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column
     private Position position;
 
-    @NotNull(message="Персона должна быть указана")
+    @NotNull
     @OneToOne
     @JoinColumn(name = "person_id", unique=true, nullable = false)
     private Person person;

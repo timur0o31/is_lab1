@@ -24,7 +24,7 @@ public class EJBExceptionMapper implements ExceptionMapper<EJBException> {
         }
 
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                .entity(Map.of("error", "Internal server error"))
+                .entity(Map.of("error", "Internal server error")).type(MediaType.APPLICATION_JSON)
                 .build();
     }
 }
