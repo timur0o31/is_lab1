@@ -26,6 +26,8 @@ public class WorkerService {
 
     public WorkerResponseDto createWorker(WorkerRequestDto dto) {
         Worker worker = workerMapper.toCreateEntity(dto);
+        Worker other = workerDao.findByPersonId(dto.getPersonId());
+        if (other != null) throw new DomainException("Персона с таким id уже связана с другим worker.");
         this.resolveDependencies(dto, worker);
         workerDao.save(worker);
         return workerMapper.toResponseDto(worker);
@@ -36,7 +38,8 @@ public class WorkerService {
             if (worker == null) {
                 throw new DomainException("Рабочего с таким id не существует");
             }
-            if (workerDao.findByPersonId(dto.getPersonId()).getId() != worker.getId()) {
+            Worker other = workerDao.findByPersonId(dto.getPersonId());
+            if (other!=null && other.getId() != worker.getId()) {
                 throw new DomainException("Персона с таким id уже связана с другим worker.");
             }
             workerMapper.toUpdateEntity(worker, dto);
