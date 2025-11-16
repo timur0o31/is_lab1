@@ -3,6 +3,7 @@ package ru.itmo.tim.mapper;
 import ru.itmo.tim.entity.Organization;
 import ru.itmo.tim.requestDto.OrganizationRequestDto;
 import ru.itmo.tim.responseDto.OrganizationResponseDto;
+import ru.itmo.tim.utils.ParserForFloatValue;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -29,10 +30,10 @@ public class OrganizationMapper {
 
     public Organization toCreateEntity(OrganizationRequestDto organizationRequestDto) {
         Organization organization = new Organization();
-        organization.setAnnualTurnover(organizationRequestDto.getAnnualTurnover());
+        organization.setAnnualTurnover(ParserForFloatValue.safeFloat(organizationRequestDto.getAnnualTurnover(),"Годовой оборот"));
         organization.setEmployeesCount(organizationRequestDto.getEmployeesCount());
         organization.setFullName(organizationRequestDto.getFullName());
-        organization.setRating(organizationRequestDto.getRating());
+        organization.setRating(ParserForFloatValue.safeFloat(organizationRequestDto.getRating(),"Рейтинг"));
         organization.setOfficialAddress(addressMapper.toCreateEntity(organizationRequestDto.getOfficialAddress()));
         organization.setPostalAddress(addressMapper.toCreateEntity(organizationRequestDto.getPostalAddress()));
         return organization;
@@ -42,10 +43,10 @@ public class OrganizationMapper {
         if (organizationRequestDto == null || organization == null) {
             return;
         }
-        organization.setAnnualTurnover(organizationRequestDto.getAnnualTurnover());
+        organization.setAnnualTurnover(ParserForFloatValue.safeFloat( organizationRequestDto.getAnnualTurnover(),"Годовой оборот"));
         organization.setEmployeesCount(organizationRequestDto.getEmployeesCount());
         organization.setFullName(organizationRequestDto.getFullName());
-        organization.setRating(organizationRequestDto.getRating());
+        organization.setRating(ParserForFloatValue.safeFloat(organizationRequestDto.getRating(),"Рейтинг"));
         organization.setOfficialAddress(addressMapper.toCreateEntity(organizationRequestDto.getOfficialAddress()));
         organization.setPostalAddress(addressMapper.toCreateEntity(organizationRequestDto.getPostalAddress()));
     }

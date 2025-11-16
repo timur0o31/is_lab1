@@ -46,6 +46,9 @@ public class WorkerController {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
                     .entity(Map.of("error", e.getMessage()))
                     .build();
+        } catch(NumberFormatException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error",e)).build();
         }
     }
 
@@ -100,6 +103,9 @@ public class WorkerController {
             WorkerResponseDto updated = workerService.updateWorker(id, dto);
             WebSocket.broadcast("worker");
             return Response.ok(updated).build();
+        }catch(NumberFormatException e) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("error",e)).build();
         } catch( IllegalArgumentException e){
             return Response.status(Response.Status.NOT_FOUND)
                     .entity(Map.of("error",e.getMessage()))

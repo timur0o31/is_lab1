@@ -11,7 +11,7 @@ public class DomainExceptionMapper implements ExceptionMapper<DomainException> {
     @Override
     public Response toResponse(DomainException e) {
         return Response.status(Response.Status.BAD_REQUEST)
-                .entity(Map.of("error", e.getMessage()))
+                .entity(Map.of("error","Ошибка доменной логики","data", e.getMessage()))
                 .build();
     }
 }
