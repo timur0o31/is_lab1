@@ -155,7 +155,7 @@ public class WorkerController {
             return Response.ok(result).build();
         } catch (DateTimeParseException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity("Invalid date format, expected YYYY-MM-DD").build();
+                    .entity(Map.of("error","Invalid date format, expected YYYY-MM-DD")).build();
         }
 
     }
