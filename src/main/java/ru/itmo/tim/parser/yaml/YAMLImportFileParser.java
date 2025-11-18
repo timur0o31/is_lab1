@@ -1,4 +1,4 @@
 package ru.itmo.tim.parser.yaml;
 
-public class YAMLInputFileParser {
+public class YAMLImportFileParser {
 }
