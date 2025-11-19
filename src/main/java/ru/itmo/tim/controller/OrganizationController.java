@@ -45,8 +45,8 @@ public class OrganizationController {
                     .entity(Map.of("error", e.getMessage()))
                     .build();
         }catch(NumberFormatException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Map.of("error",e)).build();
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+                    .entity(Map.of("error","В поле некорректное значение","data",e)).build();
         }
     }
 
@@ -126,7 +126,7 @@ public class OrganizationController {
                     .build();
         }catch(NumberFormatException e) {
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Map.of("error",e)).build();
+                    .entity(Map.of("error","В поле некорректное значение","data",e)).build();
         }
     }
 
