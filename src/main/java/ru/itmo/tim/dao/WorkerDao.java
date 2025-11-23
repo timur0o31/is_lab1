@@ -6,10 +6,11 @@ import java.util.List;
 import java.time.LocalDate;
 import java.util.Map;
 import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 
-@Stateless
+@ApplicationScoped
 public class WorkerDao extends GenericDao<Worker> {
 
     public WorkerDao() {

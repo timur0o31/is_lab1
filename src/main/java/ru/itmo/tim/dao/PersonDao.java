@@ -4,11 +4,12 @@ import ru.itmo.tim.utils.BuilderQueryForGetAll;
 import ru.itmo.tim.entity.Person;
 
 import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Map;
 
-@Stateless
+@ApplicationScoped
 public class PersonDao extends GenericDao<Person> {
     public PersonDao() {
         super(Person.class);

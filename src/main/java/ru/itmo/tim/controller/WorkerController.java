@@ -1,6 +1,5 @@
 package ru.itmo.tim.controller;
 
-import javax.ejb.EJBException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -37,18 +36,13 @@ public class WorkerController {
             WorkerResponseDto worker = workerService.createWorker(dto);
             WebSocket.broadcast("worker");
             return Response.ok(worker).build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Map.of("error", cause.getMessage()))
-                        .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
         } catch(NumberFormatException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Map.of("error",e)).build();
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                    .entity(Map.of("error", e.getMessage()))
+                    .build();
         }
     }
 

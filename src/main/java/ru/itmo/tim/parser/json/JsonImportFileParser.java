@@ -18,12 +18,12 @@ public class JsonImportFileParser implements WorkerImportFileParser {
     @Inject
     private RawMapper rawMapper;
 
-    @Override
+    /*@Override
     public List<WorkerRequestDto> parse(InputStream inputStream){
         Jsonb jsonb = JsonbBuilder.create();
         RawWorker[] arr = jsonb.fromJson(inputStream, RawWorker[].class);
         return rawMapper.toRequestDto(Arrays.asList(arr));
-    }
+    }*/
     @Override
     public boolean supports(FileFormat fileFormat) {
         return FileFormat.JSON.equals(fileFormat);

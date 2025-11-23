@@ -7,22 +7,26 @@ import ru.itmo.tim.requestDto.OrganizationRequestDto;
 import ru.itmo.tim.responseDto.OrganizationResponseDto;
 
 import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
-
-@Stateless
+@Transactional
+@ApplicationScoped
 public class OrganizationService {
     @Inject
     private OrganizationDao organizationDao;
     @Inject
     private OrganizationMapper organizationMapper;
 
+
     public OrganizationResponseDto createOrganization(OrganizationRequestDto dto) {
         Organization organization = organizationMapper.toCreateEntity(dto);
         organizationDao.save(organization);
         return organizationMapper.toResponseDto(organization);
     }
+
     public OrganizationResponseDto updateOrganization(Long  id, OrganizationRequestDto dto) {
         Organization organization = organizationDao.find(id);
         if (organization == null) {
@@ -35,6 +39,7 @@ public class OrganizationService {
     public Long countWorkers(Long id) {
         return organizationDao.countWorkers(id);
     }
+
     public void deleteOrganizationWithWorkers(Long id, Long transferToId) {
         Organization organization = organizationDao.find(id);
         if (organization == null) {

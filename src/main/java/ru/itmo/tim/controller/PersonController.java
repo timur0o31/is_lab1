@@ -33,17 +33,13 @@ public class PersonController {
             PersonResponseDto person = personService.addPerson(dto);
             WebSocket.broadcast("person");
             return Response.ok(person).build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Map.of("error", cause.getMessage()))
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("error", e.getMessage()))
                         .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
         }
     }
+
 
     @GET
     @Path("/{id}")
@@ -51,15 +47,10 @@ public class PersonController {
         try {
             PersonResponseDto person = personService.getPerson(id);
             return Response.ok(person).build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
+        } catch (IllegalArgumentException e) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Map.of("error", cause.getMessage()))
+                        .entity(Map.of("error", e.getMessage()))
                         .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
         }
     }
     @GET
@@ -99,15 +90,10 @@ public class PersonController {
             PersonResponseDto person = personService.updatePerson(id, dto);
             WebSocket.broadcast("person");
             return Response.ok(person).build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
+        } catch (IllegalArgumentException e) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Map.of("error", cause.getMessage()))
+                        .entity(Map.of("error", e.getMessage()))
                         .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
         }
     }
 
@@ -118,15 +104,10 @@ public class PersonController {
             personService.deletePerson(id);
             WebSocket.broadcast("person");
             return Response.status(Response.Status.OK).build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
+        } catch (IllegalArgumentException e) {
                 return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Map.of("error", cause.getMessage()))
+                        .entity(Map.of("error", e.getMessage()))
                         .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
         }
     }
 }

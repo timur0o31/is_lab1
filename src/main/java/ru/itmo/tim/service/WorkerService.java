@@ -8,12 +8,13 @@ import ru.itmo.tim.requestDto.WorkerRequestDto;
 import ru.itmo.tim.responseDto.WorkerResponseDto;
 
 import java.util.Map;
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-
-@Stateless
+@Transactional
+@ApplicationScoped
 public class WorkerService {
     @Inject
     private WorkerDao workerDao;

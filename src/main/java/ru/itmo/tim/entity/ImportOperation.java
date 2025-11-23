@@ -2,13 +2,12 @@ package ru.itmo.tim.entity;
 
 import ru.itmo.tim.enums.Status;
 
-import javax.persistence.*;
 
-@Entity
-@Table(name = "import_operation")
+//@Entity
+//@Table(name = "import_operation")
 public class ImportOperation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@Id
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     private Status status;
     private Long count;

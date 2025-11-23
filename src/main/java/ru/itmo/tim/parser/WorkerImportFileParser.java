@@ -7,6 +7,6 @@ import java.io.InputStream;
 import java.util.List;
 
 public interface WorkerImportFileParser {
-    List<WorkerRequestDto> parse(InputStream inputStream);
+    //List<WorkerRequestDto> parse(InputStream inputStream);
     boolean supports(FileFormat fileFormat);
 }

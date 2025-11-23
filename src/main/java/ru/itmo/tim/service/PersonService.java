@@ -7,13 +7,15 @@ import ru.itmo.tim.requestDto.PersonRequestDto;
 import ru.itmo.tim.responseDto.PersonResponseDto;
 
 import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
-
-@Stateless
+@Transactional
+@ApplicationScoped
 public class PersonService {
     @Inject
     private PersonDao personDao;

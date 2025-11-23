@@ -3,12 +3,12 @@ package ru.itmo.tim.dao;
 import ru.itmo.tim.utils.BuilderQueryForGetAll;
 import ru.itmo.tim.entity.Organization;
 
-import javax.ejb.Stateless;
+import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Map;
 
-@Stateless
+@ApplicationScoped
 public class OrganizationDao extends GenericDao<Organization> {
     public OrganizationDao() {
         super(Organization.class);

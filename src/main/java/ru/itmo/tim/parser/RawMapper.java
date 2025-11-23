@@ -2,7 +2,6 @@ package ru.itmo.tim.parser;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MapperConfig;
-import org.mapstruct.Mapping;
 import ru.itmo.tim.parser.raw.RawCoordinates;
 import ru.itmo.tim.parser.raw.RawLocation;
 import ru.itmo.tim.parser.raw.RawPerson;
@@ -14,22 +13,19 @@ import ru.itmo.tim.requestDto.WorkerRequestDto;
 
 import java.util.List;
 
-@Mapper(config = MapperConfig.class)
+//@Mapper(config = MapperConfig.class)
 public interface RawMapper {
 
-    @Mapping(target = "directorReference", source = "director")
-    @Mapping(target = "screenwriterReference", source = "screenwriter")
-    @Mapping(target = "operatorReference", source = "operator")
-    WorkerRequestDto toWorkerRequestDto(RawWorker rawWorker);
+    //WorkerRequestDto toWorkerRequestDto(RawWorker rawWorker);
 
-    List<WorkerRequestDto> toWorkerRequestDto(List<RawWorker> rawWorkers);
+    //List<WorkerRequestDto> toWorkersRequestDto(List<RawWorker> rawWorkers);
 
     PersonRequestDto toPersonRequestDto(RawPerson rawPerson);
 
     LocationRequestDto toLocationRequestDto(RawLocation rawLocation);
 
     CoordinatesRequestDto toCoordinatesRequestDto(RawCoordinates rawCoordinates);
-
+    /*
     default EmbeddedObjectDto<Long, PersonRequestDto> map(RawPerson person) {
         if (person == null) {
             return new EmbeddedObjectDto<>(null, null);
@@ -38,5 +34,5 @@ public interface RawMapper {
         result.setId(null);
         result.setValue(toPersonRequestDto(person));
         return result;
-    }
+    }*/
 }

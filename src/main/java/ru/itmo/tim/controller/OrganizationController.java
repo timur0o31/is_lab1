@@ -34,19 +34,14 @@ public class OrganizationController {
         } catch (ConstraintViolationException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Map.of("error", "Validation failed", "details", e.getMessage()))
-                    .build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
+                    .build();}
+        catch(NumberFormatException e) {
                 return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Map.of("error", cause.getMessage()))
+                        .entity(Map.of("error",e)).build();
+        } catch (IllegalArgumentException e) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("error", e.getMessage()))
                         .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
-        }catch(NumberFormatException e) {
-            return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Map.of("error",e)).build();
         }
     }
 
@@ -56,15 +51,10 @@ public class OrganizationController {
         try {
             OrganizationResponseDto organization = organizationService.getOrganization(id);
             return Response.ok(organization).build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
-                return Response.status(Response.Status.NOT_FOUND)
-                        .entity(Map.of("error", cause.getMessage()))
+        } catch (IllegalArgumentException e) {
+            return Response.status(Response.Status.NOT_FOUND)
+                        .entity(Map.of("error", e.getMessage()))
                         .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
         }
     }
 
@@ -115,19 +105,15 @@ public class OrganizationController {
             OrganizationResponseDto organization = organizationService.updateOrganization(id, dto);
             WebSocket.broadcast("organization");
             return Response.ok(organization).build();
-        } catch (EJBException e) {
-            if (e.getCause() instanceof IllegalArgumentException cause) {
-                return Response.status(Response.Status.BAD_REQUEST)
-                        .entity(Map.of("error", cause.getMessage()))
-                        .build();
-            }
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
-                    .entity(Map.of("error", e.getMessage()))
-                    .build();
         }catch(NumberFormatException e) {
             return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Map.of("error",e)).build();
-        }
+        } catch (IllegalArgumentException e) {
+                return Response.status(Response.Status.BAD_REQUEST)
+                        .entity(Map.of("error", e.getMessage()))
+                        .build();
+            }
+
     }
 
     @DELETE
