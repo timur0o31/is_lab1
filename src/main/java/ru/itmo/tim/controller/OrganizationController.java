@@ -63,12 +63,20 @@ public class OrganizationController {
                                       @QueryParam("size") int size,
                                       @QueryParam("sortColumn") String sortColumn,
                                       @QueryParam("asc") @DefaultValue("true") boolean asc,
+                                      @QueryParam("id") String id,
                                       @QueryParam("annualTurnover") String annualTurnover,
                                       @QueryParam("employeesCount") String employeesCount,
                                       @QueryParam("fullName") String fullName,
                                       @QueryParam("rating") String rating) {
         Map<String, Object> filters = new HashMap<>();
         List<String> invalid = new ArrayList<>();
+        if (id != null && !id.isEmpty()){
+            try{
+                filters.put("annualTurnover", Long.parseLong(id));
+            }catch (NumberFormatException e){
+                invalid.add("id");
+            }
+        }
         if (annualTurnover != null){
             try{
                 filters.put("annualTurnover", Float.parseFloat(annualTurnover));

@@ -58,19 +58,21 @@ public class PersonController {
                                   @QueryParam("size") int size,
                                   @QueryParam("sortColumn") String sortColumn,
                                   @QueryParam("asc") @DefaultValue("true") boolean asc,
+                                  @QueryParam("id") String id,
                                   @QueryParam("passportId") String passportId,
                                   @QueryParam("eyeColor") String eyeColor,
                                   @QueryParam("hairColor") String hairColor,
                                   @QueryParam("nationality") String nationality) {
         Map<String, Object> filters = new HashMap<>();
         List<String> invalid = new ArrayList<>();
-        if (passportId != null){
+        if (id != null && !id.isEmpty()){
             try{
-                filters.put("passportId", Long.parseLong(passportId));
+                filters.put("annualTurnover", Long.parseLong(id));
             }catch (NumberFormatException e){
-                invalid.add("passportId");
+                invalid.add("id");
             }
         }
+        if (passportId != null && !passportId.isEmpty()) filters.put("passportId", passportId);
         if (eyeColor != null && !eyeColor.isEmpty()) filters.put("eyeColor", Color.valueOf(eyeColor));
         if (hairColor != null && !hairColor.isEmpty()) filters.put("hairColor", Color.valueOf(hairColor));
         if (nationality != null && !nationality.isEmpty()) filters.put("nationality", Country.valueOf(nationality));

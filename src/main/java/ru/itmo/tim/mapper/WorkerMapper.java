@@ -50,7 +50,7 @@ public class WorkerMapper {
         worker.setName(dto.getName());
         worker.setSalary(ParserForFloatValue.safeFloat(dto.getSalary(),"Зарплата"));
         worker.setRating(dto.getRating());
-        worker.setPosition(worker.getPosition());
+        worker.setPosition(dto.getPosition());
         worker.setStartDate(dto.getStartDate());
         worker.setEndDate(dto.getEndDate());
         worker.setCoordinates(coordinatesMapper.toCreate(dto.getCoordinates()));

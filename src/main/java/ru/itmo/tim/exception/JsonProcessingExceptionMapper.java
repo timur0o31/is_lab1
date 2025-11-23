@@ -17,7 +17,7 @@ public class JsonProcessingExceptionMapper implements ExceptionMapper<Processing
             String message =  cause.getMessage();
             String fieldName = field(message);
             return Response.status(Response.Status.BAD_REQUEST)
-                    .entity(Map.of("error", "Некорректный JSON",
+                    .entity(Map.of("error", "Некорректное значение в поле",
                             "data", "Поле: "+fieldName+ " содержит слишком большое числовое значение"
                     )).build();
         }
