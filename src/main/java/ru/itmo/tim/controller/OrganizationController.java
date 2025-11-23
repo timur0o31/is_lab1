@@ -45,7 +45,7 @@ public class OrganizationController {
                     .entity(Map.of("error", e.getMessage()))
                     .build();
         }catch(NumberFormatException e) {
-            return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+            return Response.status(Response.Status.BAD_REQUEST)
                     .entity(Map.of("error","В поле некорректное значение","data",e)).build();
         }
     }
@@ -73,12 +73,20 @@ public class OrganizationController {
                                       @QueryParam("size") int size,
                                       @QueryParam("sortColumn") String sortColumn,
                                       @QueryParam("asc") @DefaultValue("true") boolean asc,
+                                      @QueryParam("id") String id,
                                       @QueryParam("annualTurnover") String annualTurnover,
                                       @QueryParam("employeesCount") String employeesCount,
                                       @QueryParam("fullName") String fullName,
                                       @QueryParam("rating") String rating) {
         Map<String, Object> filters = new HashMap<>();
         List<String> invalid = new ArrayList<>();
+        if (id != null) {
+            try{
+                filters.put("id", Long.parseLong(id));
+            }catch(NumberFormatException e){
+                invalid.add(id);
+            }
+        }
         if (annualTurnover != null){
             try{
                 filters.put("annualTurnover", Float.parseFloat(annualTurnover));

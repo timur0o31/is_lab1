@@ -8,7 +8,6 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.service.WorkerService;
 import ru.itmo.tim.enums.Position;
 import ru.itmo.tim.requestDto.WorkerRequestDto;
@@ -63,13 +62,21 @@ public class WorkerController {
                                   @QueryParam("size") @DefaultValue("10") int size,
                                   @QueryParam("sortColumn") String sortColumn,
                                   @QueryParam("asc") @DefaultValue("true") boolean asc,
+                                  @QueryParam("id") String id,
                                   @QueryParam("name") String name,
                                   @QueryParam("position") String position,
                                   @QueryParam("salary") String salary,
                                   @QueryParam("rating") String rating) {
         Map<String, Object> filters = new HashMap<>();
         List<String> invalid = new ArrayList<>();
-        if (name != null && !name.isEmpty())filters.put("name", name);
+        if (id != null && !id.isEmpty()) {
+            try{
+                filters.put("id", Long.parseLong(id));
+            }catch(NumberFormatException e){
+                invalid.add(id);
+            }
+        }
+        if (name != null && !name.isEmpty()) filters.put("name", name);
         if (salary != null){
             try{
                 filters.put("salary", Float.parseFloat(salary));
