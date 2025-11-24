@@ -1,10 +1,15 @@
 package ru.itmo.tim.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 @Embeddable
+@Getter
+@Setter
 public class Coordinates {
     @Max(255)
     private long x; //Максимальное значение поля: 255
@@ -12,20 +17,4 @@ public class Coordinates {
     private int y; //Значение поля должно быть больше -504
 
     public Coordinates() {}
-
-    public long getX() {
-        return x;
-    }
-
-    public void setX(long x) {
-        this.x = x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
-    public void setY(int y) {
-        this.y = y;
-    }
 }

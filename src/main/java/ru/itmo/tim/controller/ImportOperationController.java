@@ -1,7 +1,7 @@
 package ru.itmo.tim.controller;
 
-import ru.itmo.tim.entity.ImportOperation;
 import ru.itmo.tim.requestDto.ImportOperationRequestDto;
+import ru.itmo.tim.responseDto.ImportOperationResponseDto;
 import ru.itmo.tim.service.ImportOperationService;
 
 import javax.inject.Inject;
@@ -18,12 +18,12 @@ import java.util.Map;
 public class ImportOperationController {
     @Inject
     private ImportOperationService importOperationService;
-    /*
+
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response importWorkers(@MultipartForm ImportOperationRequestDto form){
         try{
-            ImportOperation importOperation = importOperationService.importWorkers(form);
+            ImportOperationResponseDto importOperation = importOperationService.importWorkers(form);
             Map<String, Object> body = new HashMap<>();
             body.put("status", importOperation.getStatus());
             body.put("addedCount", importOperation.getCount());
@@ -31,7 +31,7 @@ public class ImportOperationController {
         }catch(Exception e){
             return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
         }
-    }*/
+    }
     @GET
     public Response getAllOperations(){
         return Response.ok().build();

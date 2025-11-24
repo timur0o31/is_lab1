@@ -1,5 +1,8 @@
 package ru.itmo.tim.entity;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.json.bind.annotation.JsonbTransient;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -9,6 +12,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "organization")
+@Getter
+@Setter
 public class Organization {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,65 +54,5 @@ public class Organization {
     private List<Worker> workers;
 
     public Organization() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public Address getOfficialAddress() {
-        return officialAddress;
-    }
-
-    public void setOfficialAddress(Address officialAddress) {
-        this.officialAddress = officialAddress;
-    }
-
-    public Float getAnnualTurnover() {
-        return annualTurnover;
-    }
-
-    public void setAnnualTurnover(Float annualTurnover) {
-        this.annualTurnover = annualTurnover;
-    }
-
-    public Long getEmployeesCount() {
-        return employeesCount;
-    }
-
-    public void setEmployeesCount(Long employeesCount) {
-        this.employeesCount = employeesCount;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public Float getRating() {
-        return rating;
-    }
-
-    public void setRating(Float rating) {
-        this.rating = rating;
-    }
-
-    public Address getPostalAddress() {
-        return postalAddress;
-    }
-
-    public void setPostalAddress(Address postalAddress) {
-        this.postalAddress = postalAddress;
-    }
-
-    public List<Worker> getWorkers() {
-        return workers;
-    }
-
-    public void setWorkers(List<Worker> workers) {
-        this.workers = workers;
     }
 }

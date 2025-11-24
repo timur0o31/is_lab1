@@ -1,4 +1,4 @@
-package ru.itmo.tim.parser.raw;
+package ru.itmo.tim.parser.upload;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RawCoordinates {
-    private long x;
-    private int y;
+public class UploadLocation {
+    private Integer x;
+    private Integer y;
+    private Long z;
 }

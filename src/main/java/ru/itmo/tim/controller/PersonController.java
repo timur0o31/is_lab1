@@ -28,9 +28,9 @@ public class PersonController {
     @Inject
     private PersonService personService;
     @POST
-    public Response addPerson(@Valid PersonRequestDto dto) {
+    public Response createPerson(@Valid PersonRequestDto dto) {
         try {
-            PersonResponseDto person = personService.addPerson(dto);
+            PersonResponseDto person = personService.createPerson(dto);
             WebSocket.broadcast("person");
             return Response.ok(person).build();
         } catch (IllegalArgumentException e) {
@@ -39,7 +39,6 @@ public class PersonController {
                         .build();
         }
     }
-
 
     @GET
     @Path("/{id}")

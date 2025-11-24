@@ -1,9 +1,10 @@
 package ru.itmo.tim.parser.json;
 
+import ru.itmo.tim.entity.Worker;
 import ru.itmo.tim.enums.FileFormat;
-import ru.itmo.tim.parser.RawMapper;
+import ru.itmo.tim.parser.UploadMapper;
 import ru.itmo.tim.parser.WorkerImportFileParser;
-import ru.itmo.tim.parser.raw.RawWorker;
+import ru.itmo.tim.parser.upload.UploadWorker;
 import ru.itmo.tim.requestDto.WorkerRequestDto;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -15,15 +16,13 @@ import java.util.List;
 
 @ApplicationScoped
 public class JsonImportFileParser implements WorkerImportFileParser {
-    @Inject
-    private RawMapper rawMapper;
 
-    /*@Override
-    public List<WorkerRequestDto> parse(InputStream inputStream){
+    @Override
+    public List<UploadWorker> parse(InputStream inputStream){
         Jsonb jsonb = JsonbBuilder.create();
-        RawWorker[] arr = jsonb.fromJson(inputStream, RawWorker[].class);
-        return rawMapper.toRequestDto(Arrays.asList(arr));
-    }*/
+        UploadWorker[] arr = jsonb.fromJson(inputStream, UploadWorker[].class);
+        return Arrays.asList(arr);
+    }
     @Override
     public boolean supports(FileFormat fileFormat) {
         return FileFormat.JSON.equals(fileFormat);

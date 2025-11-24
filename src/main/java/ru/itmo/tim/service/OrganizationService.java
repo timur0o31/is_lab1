@@ -3,6 +3,9 @@ package ru.itmo.tim.service;
 import ru.itmo.tim.dao.OrganizationDao;
 import ru.itmo.tim.entity.Organization;
 import ru.itmo.tim.mapper.OrganizationMapper;
+import ru.itmo.tim.parser.UploadMapper;
+import ru.itmo.tim.parser.upload.UploadOrganization;
+import ru.itmo.tim.parser.upload.UploadWorker;
 import ru.itmo.tim.requestDto.OrganizationRequestDto;
 import ru.itmo.tim.responseDto.OrganizationResponseDto;
 
@@ -19,7 +22,8 @@ public class OrganizationService {
     private OrganizationDao organizationDao;
     @Inject
     private OrganizationMapper organizationMapper;
-
+    @Inject
+    private UploadMapper uploadMapper;
 
     public OrganizationResponseDto createOrganization(OrganizationRequestDto dto) {
         Organization organization = organizationMapper.toCreateEntity(dto);
@@ -68,6 +72,7 @@ public class OrganizationService {
         }
         return organization;
     }
+
     public List<OrganizationResponseDto> getAllOrganizations(int page, int size, String sortColumn, boolean sortDirection, Map<String, Object> filters){
         return organizationDao.getAll(page, size, sortColumn, sortDirection, filters).stream()
                 .map(organizationMapper::toResponseDto)
@@ -75,6 +80,17 @@ public class OrganizationService {
     }
     public Long getCount(Map<String, Object> filters){
         return organizationDao.countAll(filters);
+    }
+    public Organization createOrganizationFromImport(UploadOrganization upload){
+        Organization organization = uploadMapper.toEntity(upload);
+        if (upload.getOfficialAddress() != null){
+            organization.setOfficialAddress(uploadMapper.toEntity(upload.getOfficialAddress()));
+        }
+        if (upload.getPostalAddress() != null){
+            organization.setPostalAddress(uploadMapper.toEntity(upload.getPostalAddress()));
+        }
+        organizationDao.save(organization);
+        return organization;
     }
     public List<OrganizationResponseDto> getOtherOrganizations(Long id){
         return organizationDao.findOtherOrganizations(id).stream()

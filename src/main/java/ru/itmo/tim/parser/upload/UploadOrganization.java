@@ -1,18 +1,22 @@
-package ru.itmo.tim.requestDto;
-
+package ru.itmo.tim.parser.upload;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
+
 @Getter
 @Setter
-public class OrganizationRequestDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class UploadOrganization {
     @Valid
     @NotNull
-    private AddressRequestDto officialAddress;
+    private UploadAddress officialAddress;
     @Positive(message="годовой оборот должен быть больше 0")
     private Float annualTurnover;
     @Positive(message="количество работников должно быть больше 0")
@@ -25,8 +29,5 @@ public class OrganizationRequestDto {
     private Float rating;
     @Valid
     @NotNull
-    private AddressRequestDto postalAddress;
-
-    public OrganizationRequestDto() {
-    }
+    private UploadAddress postalAddress;
 }

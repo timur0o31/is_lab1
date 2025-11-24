@@ -23,5 +23,5 @@ public class ImportOperationRequestDto {
     private String fileName;
     @FormParam("format")
     @PartType(MediaType.TEXT_PLAIN)
-    private String fileFormat;
+    private FileFormat fileFormat;
 }

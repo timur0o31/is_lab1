@@ -26,7 +26,7 @@ public class OrganizationController {
     @Inject
     private OrganizationService organizationService;
     @POST
-    public Response addOrganization(@Valid OrganizationRequestDto dto) {
+    public Response createOrganization(@Valid OrganizationRequestDto dto) {
         try {
             OrganizationResponseDto organization = organizationService.createOrganization(dto);
             WebSocket.broadcast("organization");
