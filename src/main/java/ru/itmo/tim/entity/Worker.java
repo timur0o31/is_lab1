@@ -55,8 +55,8 @@ public class Worker {
     private Position position;
 
     @NotNull
-    @OneToOne
-    @JoinColumn(name = "person_id", unique=true, nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "person_id", nullable = false)
     private Person person;
     public Worker() {}
 

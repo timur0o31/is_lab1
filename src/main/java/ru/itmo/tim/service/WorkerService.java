@@ -4,8 +4,10 @@ import ru.itmo.tim.dao.WorkerDao;
 import ru.itmo.tim.entity.Worker;
 import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.WorkerMapper;
+import ru.itmo.tim.requestDto.HireWorkerRequestDto;
 import ru.itmo.tim.requestDto.WorkerRequestDto;
 import ru.itmo.tim.responseDto.WorkerResponseDto;
+import ru.itmo.tim.utils.ParserForFloatValue;
 
 import java.util.Map;
 import javax.ejb.Stateless;
@@ -26,8 +28,7 @@ public class WorkerService {
 
     public WorkerResponseDto createWorker(WorkerRequestDto dto) {
         Worker worker = workerMapper.toCreateEntity(dto);
-        Worker other = workerDao.findByPersonId(dto.getPersonId());
-        if (other != null) throw new DomainException("Персона с таким id уже связана с другим worker.");
+        //Worker other = workerDao.findByPersonId(dto.getPersonId());
         this.resolveDependencies(dto, worker);
         workerDao.save(worker);
         return workerMapper.toResponseDto(worker);
@@ -38,10 +39,7 @@ public class WorkerService {
             if (worker == null) {
                 throw new DomainException("Рабочего с таким id не существует");
             }
-            Worker other = workerDao.findByPersonId(dto.getPersonId());
-            if (other!=null && other.getId() != worker.getId()) {
-                throw new DomainException("Персона с таким id уже связана с другим worker.");
-            }
+        //Worker other = workerDao.findByPersonId(dto.getPersonId());
             workerMapper.toUpdateEntity(worker, dto);
             this.resolveDependencies(dto, worker);
             workerDao.update(worker);
@@ -111,8 +109,17 @@ public class WorkerService {
                 .toList();
     }
 
-    public void hireWorker(int workerId, Long orgId) {
-        workerDao.hireWorker(workerId, orgId);
+    public void hireWorker(HireWorkerRequestDto dto) {
+        if(!workerDao.hireWorker(
+                dto.getPersonId(),
+                dto.getOrganizationId(),
+                dto.getName(),
+                ParserForFloatValue.safeFloat(dto.getSalary(),"salary"),
+                dto.getRating(),
+                dto.getPosition().name(),
+                dto.getCoordinates().getX(),
+                dto.getCoordinates().getY()
+        )) throw new DomainException("У работника уже есть активная работа");
     }
 
     public void fireWorker(int workerId) {

@@ -21,28 +21,36 @@ SELECT * FROM worker w WHERE w.end_date > after_date;
 END;
 $$ LANGUAGE plpgsql;
 
-CREATE OR REPLACE FUNCTION find_available_workers()
-RETURNS SETOF worker AS $$
+CREATE OR REPLACE FUNCTION hire_worker(
+    p_person_id BIGINT,
+    p_org BIGINT,
+    p_name TEXT,
+    p_salary FLOAT,
+    p_rating INT,
+    p_position TEXT,
+    p_x BIGINT,
+    p_y INT
+)
+RETURNS BOOLEAN AS $$
+DECLARE active_count INT;
 BEGIN
-RETURN QUERY
-SELECT w.* FROM worker w WHERE w.end_date IS NOT NULL
-          AND NOT EXISTS (SELECT 1 FROM worker w2
-            WHERE w2.person_id = w.person_id
-            AND (w2.end_date IS NULL OR w2.end_date > CURRENT_DATE)
-    );
+SELECT COUNT(*) INTO active_count
+FROM worker
+WHERE person_id = p_person_id
+  AND (end_date IS NULL OR end_date > CURRENT_DATE);
+
+IF active_count > 0 THEN
+        RETURN FALSE;
+END IF;
+
+INSERT INTO worker(name,salary,rating,position,person_id,organization_id,creation_date,start_date,end_date,x,y)
+VALUES (p_name,p_salary,p_rating, p_position, p_person_id, p_org,Current_timestamp, CURRENT_DATE, NULL, p_x,p_y);
+
+RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
 
 
-CREATE OR REPLACE PROCEDURE hire_worker(p_worker_id INT,p_organization_id BIGINT)
-AS $$
-BEGIN
-UPDATE worker
-SET organization_id = p_organization_id,
-    start_date = CURRENT_DATE,
-    end_date = NULL WHERE id = p_worker_id;
-END;
-$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE PROCEDURE fire_worker(p_worker_id BIGINT)
 AS $$

@@ -57,12 +57,19 @@ public class WorkerDao extends GenericDao<Worker> {
         return entityManager.createNativeQuery("SELECT * FROM find_available_workers()", Worker.class)
                 .getResultList();
     }
-    public void hireWorker(int workerId, Long orgId) {
-        entityManager.createNativeQuery("CALL hire_worker(?1, ?2)")
-                .setParameter(1, workerId)
-                .setParameter(2, orgId)
-                .executeUpdate();
+    public boolean hireWorker(Long personId, Long orgId, String name, Float salary, int rating, String position, Long x, Integer y) {
+        return (boolean) entityManager.createNativeQuery("SELECT hire_worker(:person, :org, :name, :salary, :rating, :position, :x, :y)")
+            .setParameter("person", personId)
+            .setParameter("org", orgId)
+            .setParameter("name", name)
+            .setParameter("salary", salary)
+            .setParameter("rating", rating)
+            .setParameter("position",position)
+            .setParameter("x", x)
+                .setParameter("y",y )
+                .getSingleResult();
     }
+
 
     public void fireWorker(int workerId) {
         entityManager.createNativeQuery("CALL fire_worker(?1)")

@@ -8,6 +8,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import ru.itmo.tim.requestDto.HireWorkerRequestDto;
 import ru.itmo.tim.service.WorkerService;
 import ru.itmo.tim.enums.Position;
 import ru.itmo.tim.requestDto.WorkerRequestDto;
@@ -174,11 +175,10 @@ public class WorkerController {
         return Response.ok(persons).build();
     }
 
-    @PUT
+    @POST
     @Path("/hire")
-    public Response hireWorker(@QueryParam("workerId") int workerId,
-                               @QueryParam("organizationId") Long orgId) {
-        workerService.hireWorker(workerId, orgId);
+    public Response hireWorker(@Valid HireWorkerRequestDto dto) {
+        workerService.hireWorker(dto);
         return Response.ok().build();
     }
 
