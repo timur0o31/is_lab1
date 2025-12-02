@@ -1,13 +1,9 @@
 package ru.itmo.tim.parser.json;
 
-import ru.itmo.tim.entity.Worker;
 import ru.itmo.tim.enums.FileFormat;
-import ru.itmo.tim.parser.UploadMapper;
 import ru.itmo.tim.parser.WorkerImportFileParser;
 import ru.itmo.tim.parser.upload.UploadWorker;
-import ru.itmo.tim.requestDto.WorkerRequestDto;
 import javax.enterprise.context.ApplicationScoped;
-import javax.inject.Inject;
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import java.io.InputStream;

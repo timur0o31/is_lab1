@@ -1,6 +1,8 @@
 package ru.itmo.tim.parser.upload;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.itmo.tim.enums.Color;
 import ru.itmo.tim.enums.Country;
@@ -9,6 +11,8 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UploadPerson {
     private Color eyeColor;
     private Color hairColor;

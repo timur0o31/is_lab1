@@ -1,7 +1,6 @@
 package ru.itmo.tim.service;
 
 import ru.itmo.tim.dao.WorkerDao;
-import ru.itmo.tim.entity.Coordinates;
 import ru.itmo.tim.entity.Worker;
 import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.WorkerMapper;
@@ -29,8 +28,6 @@ public class WorkerService {
     private PersonService personService;
     @Inject
     private OrganizationService organizationService;
-    @Inject
-    private UploadMapper uploadMapper;
     public WorkerResponseDto createWorker(WorkerRequestDto dto) {
         Worker worker = workerMapper.toCreateEntity(dto);
         //Worker other = workerDao.findByPersonId(dto.getPersonId());
@@ -90,16 +87,6 @@ public class WorkerService {
         } else {
             throw new IllegalArgumentException("Organization not found");
         }
-    }
-    public void createWorkerFromImport(UploadWorker upload){
-        Worker worker = uploadMapper.toEntity(upload);
-        worker.setPerson(personService.createPersonFromImport(upload.getPerson()));
-        worker.setOrganization(organizationService.createOrganizationFromImport(upload.getOrganization()));
-        if (upload.getCoordinates() != null){
-            Coordinates coordinates = uploadMapper.toEntity(upload.getCoordinates());
-            worker.setCoordinates(coordinates);
-        }
-        workerDao.save(worker);
     }
 
     public Double sumRating() {

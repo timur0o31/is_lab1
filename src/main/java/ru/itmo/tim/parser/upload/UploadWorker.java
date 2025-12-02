@@ -1,6 +1,8 @@
 package ru.itmo.tim.parser.upload;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.itmo.tim.enums.Position;
 
@@ -14,6 +16,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UploadWorker {
     @NotBlank(message="Поле для имени должно быть заполнено")
     private String name;

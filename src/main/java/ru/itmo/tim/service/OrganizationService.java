@@ -81,17 +81,7 @@ public class OrganizationService {
     public Long getCount(Map<String, Object> filters){
         return organizationDao.countAll(filters);
     }
-    public Organization createOrganizationFromImport(UploadOrganization upload){
-        Organization organization = uploadMapper.toEntity(upload);
-        if (upload.getOfficialAddress() != null){
-            organization.setOfficialAddress(uploadMapper.toEntity(upload.getOfficialAddress()));
-        }
-        if (upload.getPostalAddress() != null){
-            organization.setPostalAddress(uploadMapper.toEntity(upload.getPostalAddress()));
-        }
-        organizationDao.save(organization);
-        return organization;
-    }
+
     public List<OrganizationResponseDto> getOtherOrganizations(Long id){
         return organizationDao.findOtherOrganizations(id).stream()
                 .map(organizationMapper::toResponseDto)

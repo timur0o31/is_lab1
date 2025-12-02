@@ -68,13 +68,5 @@ public class PersonService {
     public Long getCount(Map<String, Object> filters){
         return personDao.countAll(filters);
     }
-    public Person createPersonFromImport(UploadPerson upload){
-        Person person = uploadMapper.toEntity(upload);
-        if (upload.getLocation() != null){
-            person.setLocation(uploadMapper.toEntity(upload.getLocation()));
-        }
-        personDao.save(person);
-        return person;
-    }
 
 }

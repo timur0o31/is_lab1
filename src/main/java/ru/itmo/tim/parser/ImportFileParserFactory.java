@@ -1,6 +1,9 @@
 package ru.itmo.tim.parser;
 
 import ru.itmo.tim.enums.FileFormat;
+import ru.itmo.tim.parser.csv.CsvImportFileParser;
+import ru.itmo.tim.parser.json.JsonImportFileParser;
+
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.List;
@@ -8,9 +11,17 @@ import java.util.List;
 @ApplicationScoped
 public class ImportFileParserFactory {
     @Inject
-    private List<WorkerImportFileParser> parsers;
+    JsonImportFileParser jsonImportFileParser;
+    @Inject
+    CsvImportFileParser csvImportFileParser;
     public WorkerImportFileParser getParser(FileFormat format) {
-        return parsers.stream().filter(parser -> parser.supports(format))
-                .findFirst().orElseThrow(()->new IllegalArgumentException("Неподдерживающий формат файла "));
+        switch (format) {
+            case JSON:
+                return jsonImportFileParser;
+            case CSV:
+                return csvImportFileParser;
+            default:
+                throw new IllegalArgumentException("Неподдерживаемый формат: " + format);
+        }
     }
 }
