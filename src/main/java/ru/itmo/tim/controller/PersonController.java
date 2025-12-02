@@ -66,9 +66,9 @@ public class PersonController {
         List<String> invalid = new ArrayList<>();
         if (id != null && !id.isEmpty()){
             try{
-                filters.put("annualTurnover", Long.parseLong(id));
+                filters.put("id", Long.parseLong(id));
             }catch (NumberFormatException e){
-                invalid.add("id");
+                invalid.add(id);
             }
         }
         if (passportId != null && !passportId.isEmpty()) filters.put("passportId", passportId);

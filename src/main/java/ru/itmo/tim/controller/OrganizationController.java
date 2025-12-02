@@ -70,11 +70,11 @@ public class OrganizationController {
                                       @QueryParam("rating") String rating) {
         Map<String, Object> filters = new HashMap<>();
         List<String> invalid = new ArrayList<>();
-        if (id != null && !id.isEmpty()){
+        if (id != null) {
             try{
-                filters.put("annualTurnover", Long.parseLong(id));
-            }catch (NumberFormatException e){
-                invalid.add("id");
+                filters.put("id", Long.parseLong(id));
+            }catch(NumberFormatException e){
+                invalid.add(id);
             }
         }
         if (annualTurnover != null){
@@ -120,8 +120,7 @@ public class OrganizationController {
                 return Response.status(Response.Status.BAD_REQUEST)
                         .entity(Map.of("error", e.getMessage()))
                         .build();
-            }
-
+        }
     }
 
     @DELETE

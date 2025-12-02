@@ -8,6 +8,7 @@ import ru.itmo.tim.enums.Country;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 
 @Entity
 @Table(name = "person")
@@ -33,6 +34,8 @@ public class Person {
 
     @Enumerated(EnumType.STRING)
     private Country nationality; //Поле может быть null
+    @OneToMany(mappedBy="person")
+    private List<Worker> worker;
 
     public Person() {
     }

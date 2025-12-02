@@ -16,12 +16,12 @@ import java.time.LocalDateTime;
 public class WorkerRequestDto {
     @NotBlank(message="Поле для имени должно быть заполнено")
     private String name;
-    @NotNull
+    @NotNull(message = "Координаты не могут быть null")
     @Valid
     private CoordinatesRequestDto coordinates;
     @NotNull(message="Организация должна быть указана, не может быть null")
     private Long organizationId;
-    @NotNull
+    @NotNull(message="Зарплата не может быть null")
     @Positive(message="Зарплата должна быть больше 0")
     private Float salary;
     @Positive(message="Рейтинг должен быть положителен")

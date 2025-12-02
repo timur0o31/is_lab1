@@ -25,9 +25,9 @@ public class BuilderQueryForGetAll {
             Object value = entry.getValue();
             if (value != null) {
                 if (value instanceof String) {
-                    query.append(" AND LOWER(")
+                    query.append(" AND ")
                             .append(alias).append(".").append(entry.getKey())
-                            .append(") LIKE LOWER(:").append(entry.getKey()).append(")");
+                            .append(" = :").append(entry.getKey());
                 } else {
                     query.append(" AND ")
                             .append(alias).append(".").append(entry.getKey())
@@ -42,7 +42,7 @@ public class BuilderQueryForGetAll {
             Object value = entry.getValue();
             if (value != null) {
                 if (value instanceof String) {
-                    query.setParameter(entry.getKey(), "%" + value + "%");
+                    query.setParameter(entry.getKey(), value ); //
                 } else {
                     query.setParameter(entry.getKey(), value);
                 }
