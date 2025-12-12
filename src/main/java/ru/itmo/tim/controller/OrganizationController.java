@@ -77,7 +77,11 @@ public class OrganizationController {
                                       @QueryParam("annualTurnover") String annualTurnover,
                                       @QueryParam("employeesCount") String employeesCount,
                                       @QueryParam("fullName") String fullName,
-                                      @QueryParam("rating") String rating) {
+                                      @QueryParam("rating") String rating,
+                                        @QueryParam("officialAddress.street") String official_street,
+                                        @QueryParam("officialAddress.zipCode") String official_zip,
+                                        @QueryParam("postalAddress.street") String postal_street,
+                                        @QueryParam("postalAddress.zipCode") String postal_zip) {
         Map<String, Object> filters = new HashMap<>();
         List<String> invalid = new ArrayList<>();
         if (id != null) {
@@ -102,6 +106,10 @@ public class OrganizationController {
             }
         }
         if (fullName != null && !fullName.isEmpty())filters.put("fullName", fullName);
+        if (official_street != null && !official_street.isEmpty())filters.put("officialAddress.street", official_street);
+        if (official_zip != null && !official_zip.isEmpty())filters.put("officialAddress.zipCode", official_zip);
+        if (postal_street != null && !postal_street.isEmpty())filters.put("postalAddress.street", postal_street);
+        if (postal_zip != null && !postal_zip.isEmpty())filters.put("postalAddress.zipCode", postal_zip);
         if (rating != null){
             try{
                 filters.put("rating", Float.parseFloat(rating));

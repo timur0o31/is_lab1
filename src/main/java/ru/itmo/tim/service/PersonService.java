@@ -2,6 +2,7 @@ package ru.itmo.tim.service;
 
 import ru.itmo.tim.dao.PersonDao;
 import ru.itmo.tim.entity.Person;
+import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.PersonMapper;
 import ru.itmo.tim.requestDto.PersonRequestDto;
 import ru.itmo.tim.responseDto.PersonResponseDto;
@@ -41,7 +42,10 @@ public class PersonService {
     public void deletePerson(Long id) {
         Person person = personDao.find(id);
         if (person == null) {
-            throw new IllegalArgumentException("Person not found");
+            throw new IllegalArgumentException("Человек не найден");
+        }
+        if (personDao.hasWorkers(id)){
+            throw new DomainException("Нельзя удалить Person, пока на него ссылаются workers");
         }
         personDao.delete(person);
     }
@@ -51,7 +55,7 @@ public class PersonService {
     public Person getPersonEntity(Long id){
         Person person = personDao.find(id);
         if (person == null) {
-            throw new IllegalArgumentException("Person not found");
+            throw new IllegalArgumentException("Человек не найден");
         }
         return person;
     }

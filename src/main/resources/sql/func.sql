@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION hire_worker(
     p_name TEXT,
     p_salary FLOAT,
     p_rating INT,
-    p_position TEXT,
+    p_position VARCHAR(100),
     p_x BIGINT,
     p_y INT
 )
@@ -67,7 +67,7 @@ AS $$
 BEGIN
     RETURN QUERY
         SELECT * FROM worker w
-        WHERE w.organization_id = org_id AND w.end_date is NULL;
+        WHERE w.organization_id = org_id AND (w.end_date is NULL OR w.end_date > CURRENT_DATE);
 END;
 $$ LANGUAGE plpgsql;
 

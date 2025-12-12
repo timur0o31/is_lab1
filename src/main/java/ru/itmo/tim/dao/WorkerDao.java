@@ -1,5 +1,6 @@
 package ru.itmo.tim.dao;
 
+import org.hibernate.type.StringType;
 import ru.itmo.tim.utils.BuilderQueryForGetAll;
 import ru.itmo.tim.entity.Worker;
 import java.util.List;
@@ -58,13 +59,13 @@ public class WorkerDao extends GenericDao<Worker> {
                 .getResultList();
     }
     public boolean hireWorker(Long personId, Long orgId, String name, Float salary, int rating, String position, Long x, Integer y) {
-        return (boolean) entityManager.createNativeQuery("SELECT hire_worker(:person, :org, :name, :salary, :rating, :position, :x, :y)")
+        return (boolean) entityManager.createNativeQuery("SELECT hire_worker(:person, :org, :name, :salary, :rating, CAST(:position AS VARCHAR), :x, :y)")
             .setParameter("person", personId)
             .setParameter("org", orgId)
             .setParameter("name", name)
             .setParameter("salary", salary)
             .setParameter("rating", rating)
-            .setParameter("position",position)
+            .setParameter("position", position)
             .setParameter("x", x)
                 .setParameter("y",y )
                 .getSingleResult();

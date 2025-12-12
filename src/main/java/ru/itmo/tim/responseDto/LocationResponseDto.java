@@ -8,23 +8,23 @@ public class LocationResponseDto {
 
     public LocationResponseDto() {
     }
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public int getX() {
+    public Integer getX() {
         return x;
     }
 
-    public void setX(int x) {
+    public void setX(Integer x) {
         this.x = x;
     }
 
-    public int getY() {
+    public Integer getY() {
         return y;
     }
 
@@ -32,11 +32,11 @@ public class LocationResponseDto {
         this.y = y;
     }
 
-    public long getZ() {
+    public Long getZ() {
         return z;
     }
 
-    public void setZ(long z) {
+    public void setZ(Long z) {
         this.z = z;
     }
 }

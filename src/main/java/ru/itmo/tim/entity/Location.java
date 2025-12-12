@@ -8,7 +8,7 @@ public class Location {
     private Long z;
     public Location() {
     }
-    public int getX() {
+    public Integer getX() {
         return x;
     }
 
@@ -16,7 +16,7 @@ public class Location {
         this.x = x;
     }
 
-    public int getY() {
+    public Integer getY() {
         return y;
     }
 
@@ -24,7 +24,7 @@ public class Location {
         this.y = y;
     }
 
-    public long getZ() {
+    public Long getZ() {
         return z;
     }
 
