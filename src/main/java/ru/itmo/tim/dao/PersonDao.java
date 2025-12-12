@@ -30,5 +30,11 @@ public class PersonDao extends GenericDao<Person> {
         BuilderQueryForGetAll.setQueryParameters(query,filters);
         return query.getSingleResult();
     }
+    public boolean hasWorkers(long personId){
+        Long count = entityManager.createQuery(
+                "SELECT COUNT(w) FROM Worker w WHERE w.person.id=:pid", Long.class)
+                .setParameter("pid", personId).getSingleResult();
+        return count > 0;
+    }
 
 }

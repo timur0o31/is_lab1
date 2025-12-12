@@ -74,7 +74,7 @@ public class WorkerController {
         if (name != null && !name.isEmpty())filters.put("name", name);
         if (id != null && !id.isEmpty()) {
             try{
-                filters.put("id", Long.parseLong(id));
+                filters.put("id", Integer.parseInt(id));
             }catch(NumberFormatException e){
                 invalid.add(id);
             }
@@ -98,7 +98,6 @@ public class WorkerController {
         if (!invalid.isEmpty()) return Response.status(Response.Status.BAD_REQUEST)
                 .entity(Map.of("error", "Некорректные фильтры", "invalidFields", invalid))
                 .build();
-
         List<WorkerResponseDto> workers = workerService.getAll(page, size, filters, sortColumn, asc);
         Long count = workerService.getCount(filters);
 

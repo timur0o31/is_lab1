@@ -27,11 +27,11 @@ public class BuilderQueryForGetAll {
                 if (value instanceof String) {
                     query.append(" AND ")
                             .append(alias).append(".").append(entry.getKey())
-                            .append(" = :").append(entry.getKey());
+                            .append(" = :").append(paramName(entry.getKey()));
                 } else {
                     query.append(" AND ")
                             .append(alias).append(".").append(entry.getKey())
-                            .append(" = :").append(entry.getKey());
+                            .append(" = :").append(paramName(entry.getKey()));
                 }
             }
         }
@@ -42,11 +42,14 @@ public class BuilderQueryForGetAll {
             Object value = entry.getValue();
             if (value != null) {
                 if (value instanceof String) {
-                    query.setParameter(entry.getKey(), value ); //
+                    query.setParameter(paramName(entry.getKey()), value ); //
                 } else {
                     query.setParameter(entry.getKey(), value);
                 }
             }
         }
+    }
+    private static String paramName(String fieldPath) {
+        return fieldPath.replace(".", "_");
     }
 }

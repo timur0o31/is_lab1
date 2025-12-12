@@ -42,6 +42,7 @@ public class WorkerService {
                 throw new DomainException("Рабочего с таким id не существует");
             }
         //Worker other = workerDao.findByPersonId(dto.getPersonId());
+            if (dto.getPersonId() != worker.getPerson().getId()) throw new DomainException("Изменение Person у существующего Worker запрещено.");
             workerMapper.toUpdateEntity(worker, dto);
             this.resolveDependencies(dto, worker);
             workerDao.update(worker);
@@ -87,6 +88,9 @@ public class WorkerService {
         } else {
             throw new IllegalArgumentException("Organization not found");
         }
+        if (worker.getStartDate()!=null && worker.getEndDate()!=null) {
+            if (worker.getEndDate().isBefore(worker.getStartDate().toLocalDate())) throw new DomainException("Дата окончания работы не может быть раньше трудоустройства");
+        }
     }
 
     public Double sumRating() {
@@ -112,13 +116,17 @@ public class WorkerService {
     }
 
     public void hireWorker(HireWorkerRequestDto dto) {
+        String name = null;
+        if (dto.getPosition() != null) {
+            name = dto.getPosition().name();
+        }
         if(!workerDao.hireWorker(
                 dto.getPersonId(),
                 dto.getOrganizationId(),
                 dto.getName(),
                 ParserForFloatValue.safeFloat(dto.getSalary(),"salary"),
                 dto.getRating(),
-                dto.getPosition().name(),
+                name,
                 dto.getCoordinates().getX(),
                 dto.getCoordinates().getY()
         )) throw new DomainException("У работника уже есть активная работа");
