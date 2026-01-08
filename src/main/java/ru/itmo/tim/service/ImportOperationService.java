@@ -19,7 +19,9 @@ import ru.itmo.tim.responseDto.ImportOperationResponseDto;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Transactional
 @ApplicationScoped
@@ -80,5 +82,13 @@ public class ImportOperationService {
         }
         importOperationDao.save(importOperation);
         return importOperationMapper.toResponseDto(importOperation);
+    }
+    public List<ImportOperationResponseDto>getAllImportOperations(){
+        return importOperationDao.getAllOperations().stream()
+                .map(importOperationMapper::toResponseDto).toList();
+    }
+    public List<ImportOperationResponseDto> getAllImportOperations(int page, int size, String sortColumn, boolean asc, Map<String, Object> filters){
+        return importOperationDao.getAllOperations(page,size,sortColumn,asc, filters).stream()
+                .map(importOperationMapper::toResponseDto).toList();
     }
 }

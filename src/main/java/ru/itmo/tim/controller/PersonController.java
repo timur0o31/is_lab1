@@ -53,8 +53,7 @@ public class PersonController {
         }
     }
     @GET
-    public Response getAllPersons(@QueryParam("page") int page,
-                                  @QueryParam("size") int size,
+    public Response getAllPersons(@QueryParam("page") int page, @QueryParam("size") int size,
                                   @QueryParam("sortColumn") String sortColumn,
                                   @QueryParam("asc") @DefaultValue("true") boolean asc,
                                   @QueryParam("id") String id,

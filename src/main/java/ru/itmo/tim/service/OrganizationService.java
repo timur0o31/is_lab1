@@ -10,6 +10,7 @@ import ru.itmo.tim.requestDto.OrganizationRequestDto;
 import ru.itmo.tim.responseDto.OrganizationResponseDto;
 
 import javax.ejb.Stateless;
+import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -40,6 +41,7 @@ public class OrganizationService {
         organizationDao.update(organization);
         return organizationMapper.toResponseDto(organization);
     }
+
     public Long countWorkers(Long id) {
         return organizationDao.countWorkers(id);
     }
