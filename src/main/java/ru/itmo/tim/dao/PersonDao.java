@@ -5,7 +5,9 @@ import ru.itmo.tim.entity.Person;
 
 import javax.ejb.Stateless;
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
@@ -36,5 +38,14 @@ public class PersonDao extends GenericDao<Person> {
                 .setParameter("pid", personId).getSingleResult();
         return count > 0;
     }
-
+    @Transactional
+    public Person existByPassportId(String passportId){
+        try {
+            TypedQuery<Person> query = entityManager.createQuery("SELECT p FROM Person p WHERE p.passportId= :passportId", Person.class)
+                    .setParameter("passportId", passportId);
+            return query.getSingleResult();
+        }catch(NoResultException e){
+            return null;
+        }
+    }
 }

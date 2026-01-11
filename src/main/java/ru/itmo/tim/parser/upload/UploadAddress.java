@@ -17,4 +17,12 @@ public class UploadAddress {
     @Size(min = 4, message="длина почтового индекса должна быть больше 3")
     @NotNull(message="Поле не может быть null")
     private String zipCode;
+    @Override
+    public String toString() {
+        return "UploadAddress{" +
+                "street='" + street + '\'' +
+                ", zipCode='" + zipCode + '\'' +
+                '}';
+    }
+
 }

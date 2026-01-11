@@ -30,4 +30,16 @@ public class UploadOrganization {
     @Valid
     @NotNull
     private UploadAddress postalAddress;
+    @Override
+    public String toString() {
+        return "UploadOrganization{" +
+                "officialAddress=" + officialAddress +
+                ", annualTurnover=" + annualTurnover +
+                ", employeesCount=" + employeesCount +
+                ", fullName='" + fullName + '\'' +
+                ", rating=" + rating +
+                ", postalAddress=" + postalAddress +
+                '}';
+    }
+
 }

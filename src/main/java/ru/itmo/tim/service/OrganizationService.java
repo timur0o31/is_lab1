@@ -2,6 +2,8 @@ package ru.itmo.tim.service;
 
 import ru.itmo.tim.dao.OrganizationDao;
 import ru.itmo.tim.entity.Organization;
+import ru.itmo.tim.entity.Person;
+import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.OrganizationMapper;
 import ru.itmo.tim.parser.UploadMapper;
 import ru.itmo.tim.parser.upload.UploadOrganization;
@@ -28,6 +30,7 @@ public class OrganizationService {
 
     public OrganizationResponseDto createOrganization(OrganizationRequestDto dto) {
         Organization organization = organizationMapper.toCreateEntity(dto);
+        this.checkConstraint(organization);
         organizationDao.save(organization);
         return organizationMapper.toResponseDto(organization);
     }
@@ -37,6 +40,7 @@ public class OrganizationService {
         if (organization == null) {
             throw new IllegalArgumentException("Organization not found");
         }
+        this.checkUpdateUniqueConstraint(organization,dto.getFullName());
         organizationMapper.toUpdateEntity(dto, organization);
         organizationDao.update(organization);
         return organizationMapper.toResponseDto(organization);
@@ -88,5 +92,16 @@ public class OrganizationService {
         return organizationDao.findOtherOrganizations(id).stream()
                 .map(organizationMapper::toResponseDto)
                 .toList();
+    }
+    public void checkConstraint(Organization organization){
+        if (organizationDao.existByName(organization.getFullName())!=null){
+            throw new DomainException("Организация с данным именем уже существует!");
+        }
+    }
+    public void checkUpdateUniqueConstraint(Organization organization, String fullName){
+        Organization organizationDB = organizationDao.existByName(fullName);
+        if (organizationDB!=null && organizationDB.getId()!=organization.getId()){
+            throw new DomainException("Организация с данным именем уже существует!");
+        }
     }
 }

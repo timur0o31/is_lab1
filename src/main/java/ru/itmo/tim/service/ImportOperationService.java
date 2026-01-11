@@ -5,15 +5,17 @@ import ru.itmo.tim.dao.OrganizationDao;
 import ru.itmo.tim.dao.PersonDao;
 import ru.itmo.tim.dao.WorkerDao;
 import ru.itmo.tim.entity.ImportOperation;
+import ru.itmo.tim.entity.Organization;
+import ru.itmo.tim.entity.Person;
 import ru.itmo.tim.entity.Worker;
 import ru.itmo.tim.enums.Status;
+import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.ImportOperationMapper;
 import ru.itmo.tim.parser.ImportFileParserFactory;
 import ru.itmo.tim.parser.UploadMapper;
 import ru.itmo.tim.parser.WorkerImportFileParser;
 import ru.itmo.tim.parser.upload.UploadWorker;
 import ru.itmo.tim.requestDto.ImportOperationRequestDto;
-import ru.itmo.tim.requestDto.WorkerRequestDto;
 import ru.itmo.tim.responseDto.ImportOperationResponseDto;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -23,7 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Transactional
 @ApplicationScoped
 public class ImportOperationService {
     @Inject
@@ -40,13 +41,16 @@ public class ImportOperationService {
     private ImportOperationMapper importOperationMapper;
     @Inject
     private ImportFileParserFactory parserFactory;
+
+
     public ImportOperationService() {}
-    public ImportOperationResponseDto importWorkers(ImportOperationRequestDto dto){
+    @Transactional
+    public List<Worker> importWorkers(ImportOperationRequestDto dto){
         WorkerImportFileParser parser = parserFactory.getParser(dto.getFileFormat());
-        List<UploadWorker> workers = parser.parse(dto.getFileStream());
-        ImportOperation importOperation = new ImportOperation();
-        long count = 0;
+        List<Worker> ans = new ArrayList<>();
+        String messageError = "";
         try{
+            List<UploadWorker> workers = parser.parse(dto.getFileStream());
             for (UploadWorker upload : workers) {
                 Worker worker = uploadMapper.toEntity(upload);
                 if (upload.getPerson()!=null){
@@ -54,34 +58,43 @@ public class ImportOperationService {
                     if (upload.getPerson().getLocation() != null) {
                         person.setLocation(uploadMapper.toEntity(upload.getPerson().getLocation()));
                     }
-                    personDao.save(person);
-                    worker.setPerson(person);
+                    Person personReference = personDao.existByPassportId(person.getPassportId());
+                    if (personReference!=null){
+                        isSamePerson(person,personReference);
+                        worker.setPerson(personReference);
+                    }else {
+                        personDao.save(person);
+                        worker.setPerson(person);
+                    }
                 }
                 if (upload.getOrganization()!=null){
                     var organization = uploadMapper.toEntity(upload.getOrganization());
-                    System.out.println(organization.getRating());
-                    System.out.println(organization.getFullName());
-                    if (upload.getOrganization().getOfficialAddress() != null) {
-                        organization.setOfficialAddress(uploadMapper.toEntity(upload.getOrganization().getOfficialAddress()));
+                    Organization organizationReference = organizationDao.existByName(upload.getOrganization().getFullName());
+                    if (organizationReference!=null){
+                        isSameOrganization(organization, organizationReference);
+                        worker.setOrganization(organizationReference);
                     }
-
-                    if (upload.getOrganization().getPostalAddress() != null) {
-                        organization.setPostalAddress(uploadMapper.toEntity(upload.getOrganization().getPostalAddress()));
+                    else{
+                        if (upload.getOrganization().getOfficialAddress() != null) {
+                            organization.setOfficialAddress(uploadMapper.toEntity(upload.getOrganization().getOfficialAddress()));
+                        }
+                        if (upload.getOrganization().getPostalAddress() != null) {
+                            organization.setPostalAddress(uploadMapper.toEntity(upload.getOrganization().getPostalAddress()));
+                        }
+                        organizationDao.save(organization);
+                        worker.setOrganization(organization);
                     }
-                    organizationDao.save(organization);
-                    worker.setOrganization(organization);
                 }
+                if (worker.getStartDate()!=null && worker.getEndDate()!=null) {
+                    if (worker.getEndDate().isBefore(worker.getStartDate().toLocalDate())) throw new DomainException(worker.getName() + ": дата окончания работы не может быть раньше трудоустройства");
+                }
+                ans.add(worker);
                 workerDao.save(worker);
-                count++;
             }
-            importOperation.setStatus(Status.ACCEPT);
-            importOperation.setCount(count);
         }catch(Exception e){
-            e.printStackTrace();
-            importOperation.setStatus(Status.REJECT);
+            throw e;
         }
-        importOperationDao.save(importOperation);
-        return importOperationMapper.toResponseDto(importOperation);
+        return ans;
     }
     public List<ImportOperationResponseDto>getAllImportOperations(){
         return importOperationDao.getAllOperations().stream()
@@ -90,5 +103,22 @@ public class ImportOperationService {
     public List<ImportOperationResponseDto> getAllImportOperations(int page, int size, String sortColumn, boolean asc, Map<String, Object> filters){
         return importOperationDao.getAllOperations(page,size,sortColumn,asc, filters).stream()
                 .map(importOperationMapper::toResponseDto).toList();
+    }
+    public Long getCount(Map<String,Object> filters){
+        return importOperationDao.countAll(filters);
+    }
+    public void isSamePerson(Person person, Person personreference){
+        return person.getNationality()==personreference.getNationality() &&
+    }
+    public void isSameOrganization(Organization organization, Organization organizationReference){
+    }
+    @Transactional
+    public ImportOperationResponseDto persist(Status status, Long count, String message){
+        ImportOperation importOperation = new ImportOperation();
+        importOperation.setCount(count);
+        importOperation.setStatus(status);
+        if (!message.isEmpty()) importOperation.setMessage(message);
+        importOperationDao.save(importOperation);
+        return importOperationMapper.toResponseDto(importOperation);
     }
 }

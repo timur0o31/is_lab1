@@ -5,7 +5,6 @@ import ru.itmo.tim.entity.Person;
 import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.PersonMapper;
 import ru.itmo.tim.parser.UploadMapper;
-import ru.itmo.tim.parser.upload.UploadPerson;
 import ru.itmo.tim.requestDto.PersonRequestDto;
 import ru.itmo.tim.responseDto.PersonResponseDto;
 
@@ -29,6 +28,7 @@ public class PersonService {
 
     public PersonResponseDto createPerson(PersonRequestDto personRequestDto) {
             Person person = personMapper.toCreateEntity(personRequestDto);
+            this.checkCreateUniqueConstraint(person);
             personDao.save(person);
             return personMapper.toResponseDto(person);
     }
@@ -38,6 +38,7 @@ public class PersonService {
         if (person == null) {
             throw new IllegalArgumentException("Person not found");
         }
+        this.checkUpdateUniqueConstraint(person, personRequestDto.getPassportId());
         personMapper.toUpdateEntity(person, personRequestDto);
         personDao.update(person);
         return personMapper.toResponseDto(person);
@@ -72,5 +73,15 @@ public class PersonService {
     public Long getCount(Map<String, Object> filters){
         return personDao.countAll(filters);
     }
-
+    public void checkCreateUniqueConstraint(Person person){
+        if (personDao.existByPassportId(person.getPassportId())!=null){
+            throw new DomainException("Человек с данным passportId уже существует!");
+        }
+    }
+    public void checkUpdateUniqueConstraint(Person person, String passportId){
+        Person personDB = personDao.existByPassportId(passportId);
+        if (personDB!= null && personDB.getId()!=person.getId()){
+            throw new DomainException("Человек с данным passportId уже существует!");
+        }
+    }
 }

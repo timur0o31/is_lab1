@@ -25,10 +25,9 @@ public class UploadWorker {
     @NotNull
     @Valid
     private UploadCoordinates coordinates;
-
+    @Valid
     @NotNull(message="Организация должна быть указана, не может быть null")
     private UploadOrganization organization;
-
     @NotNull
     @Positive(message="Зарплата должна быть больше 0")
     private Float salary;
@@ -36,9 +35,25 @@ public class UploadWorker {
     private int rating;
     @Enumerated(EnumType.STRING)
     private Position position;
+    @Valid
     @NotNull(message="Персона должна быть указана")
     private UploadPerson person;
     @NotNull(message="Дата начала работы не может быть null")
     private LocalDateTime startDate;
     private LocalDate endDate;
+    @Override
+    public String toString() {
+        return "UploadWorker{" +
+                "name='" + name + '\'' +
+                ", coordinates=" + coordinates +
+                ", organization=" + organization +
+                ", salary=" + salary +
+                ", rating=" + rating +
+                ", position=" + position +
+                ", person=" + person +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                '}';
+    }
+
 }

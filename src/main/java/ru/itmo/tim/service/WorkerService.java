@@ -1,6 +1,10 @@
 package ru.itmo.tim.service;
 
+import ru.itmo.tim.dao.OrganizationDao;
+import ru.itmo.tim.dao.PersonDao;
 import ru.itmo.tim.dao.WorkerDao;
+import ru.itmo.tim.entity.Organization;
+import ru.itmo.tim.entity.Person;
 import ru.itmo.tim.entity.Worker;
 import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.WorkerMapper;
@@ -17,7 +21,7 @@ import javax.inject.Inject;
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-@Transactional
+
 @ApplicationScoped
 public class WorkerService {
     @Inject
@@ -28,6 +32,13 @@ public class WorkerService {
     private PersonService personService;
     @Inject
     private OrganizationService organizationService;
+    @Inject
+    private PersonDao personDao;
+    @Inject
+    private OrganizationDao organizationDao;
+    @Inject
+    private UploadMapper uploadMapper;
+    @Transactional
     public WorkerResponseDto createWorker(WorkerRequestDto dto) {
         Worker worker = workerMapper.toCreateEntity(dto);
         //Worker other = workerDao.findByPersonId(dto.getPersonId());
@@ -35,7 +46,7 @@ public class WorkerService {
         workerDao.save(worker);
         return workerMapper.toResponseDto(worker);
     }
-
+    @Transactional
     public WorkerResponseDto updateWorker(int id, WorkerRequestDto dto) {
             Worker worker = workerDao.find(id);
             if (worker == null) {
@@ -48,7 +59,7 @@ public class WorkerService {
             workerDao.update(worker);
             return workerMapper.toResponseDto(worker);
     }
-
+    @Transactional
     public void deleteWorker(int id) {
         Worker worker = workerDao.find(id);
         if (worker == null) {
@@ -92,7 +103,6 @@ public class WorkerService {
             if (worker.getEndDate().isBefore(worker.getStartDate().toLocalDate())) throw new DomainException("Дата окончания работы не может быть раньше трудоустройства");
         }
     }
-
     public Double sumRating() {
         return workerDao.sumRatings();
     }
@@ -114,7 +124,7 @@ public class WorkerService {
                 .map(workerMapper::toResponseDto)
                 .toList();
     }
-
+    @Transactional
     public void hireWorker(HireWorkerRequestDto dto) {
         String name = null;
         if (dto.getPosition() != null) {
@@ -131,7 +141,7 @@ public class WorkerService {
                 dto.getCoordinates().getY()
         )) throw new DomainException("У работника уже есть активная работа");
     }
-
+    @Transactional
     public void fireWorker(int workerId) {
         Worker worker = workerDao.find(workerId);
         if (worker == null) {

@@ -8,7 +8,6 @@ import java.util.Map;
 
 @Provider
 public class FieldValidationExceptionMapper implements ExceptionMapper<FieldValidationException> {
-
     @Override
     public Response toResponse(FieldValidationException e) {
         return Response.status(Response.Status.BAD_REQUEST)

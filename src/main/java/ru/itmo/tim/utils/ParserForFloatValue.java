@@ -12,4 +12,5 @@ public class ParserForFloatValue {
         }
         return value;
     }
+
 }

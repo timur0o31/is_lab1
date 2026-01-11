@@ -21,4 +21,14 @@ public class UploadPerson {
     @Pattern(regexp=".*\\S.*", message="строка не может быть пустой или состоять только из пробелов")
     private String passportId;
     private Country nationality;
+    @Override
+    public String toString() {
+        return "UploadPerson{" +
+                "eyeColor=" + eyeColor +
+                ", hairColor=" + hairColor +
+                ", location=" + location +
+                ", passportId='" + passportId + '\'' +
+                ", nationality=" + nationality +
+                '}';
+    }
 }

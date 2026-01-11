@@ -17,4 +17,12 @@ public class UploadCoordinates {
     private long x;
     @Min(value=-503, message = "координата y не может быть меньше -503")
     private int y;
+    @Override
+    public String toString() {
+        return "UploadCoordinates{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
+
 }

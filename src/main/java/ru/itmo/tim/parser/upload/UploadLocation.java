@@ -13,4 +13,13 @@ public class UploadLocation {
     private Integer x;
     private Integer y;
     private Long z;
+    @Override
+    public String toString() {
+        return "UploadLocation{" +
+                "x=" + x +
+                ", y=" + y +
+                ", z=" + z +
+                '}';
+    }
+
 }
