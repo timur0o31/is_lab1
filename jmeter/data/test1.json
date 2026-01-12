@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Федор Петров",
+    "coordinates": {
+      "x": 120,
+      "y": -100
+    },
+    "organization": {
+      "officialAddress": {
+        "street": "Невский проспект, 1",
+        "zipCode": "190000"
+      },
+      "annualTurnover": 1000000.5,
+      "employeesCount": 51,
+      "fullName": "yandex",
+      "rating": 4.5,
+      "postalAddress": {
+        "street": "Абонентский ящик 5",
+        "zipCode": "190001"
+      }
+    },
+    "salary": 75000.0,
+    "rating": 5,
+    "position": "DEVELOPER",
+    "person": {
+      "eyeColor": "GREEN",
+      "hairColor": "BLACK",
+      "location": {
+        "x": 10,
+        "y": 20,
+        "z": 30
+      },
+      "passportId": "AB1234567",
+      "nationality": "GERMANY"
+    },
+    "startDate": "2025-02-01T09:00:00",
+    "endDate": "2025-12-31"
+  }
+]

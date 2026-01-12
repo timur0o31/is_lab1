@@ -93,6 +93,9 @@ public class OrganizationService {
                 .map(organizationMapper::toResponseDto)
                 .toList();
     }
+    public OrganizationResponseDto getOrganizationByFullName(String fullName){
+        return organizationMapper.toResponseDto(organizationDao.existByName(fullName));
+    }
     public void checkConstraint(Organization organization){
         if (organizationDao.existByName(organization.getFullName())!=null){
             throw new DomainException("Организация с данным именем уже существует!");

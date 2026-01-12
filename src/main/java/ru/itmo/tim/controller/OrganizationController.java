@@ -138,7 +138,18 @@ public class OrganizationController {
         WebSocket.broadcast("organization");
         return Response.status(Response.Status.OK).build();
     }
-
+    @GET
+    @Path("/fullName/{fullName}")
+    public Response getByFullName(@PathParam("fullName") String fullName){
+        try{
+            OrganizationResponseDto responseDto = organizationService.getOrganizationByFullName(fullName);
+            return Response.ok(responseDto).build();
+        }catch(Exception e){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of("error", e.getMessage()))
+                    .build();
+        }
+    }
     @GET
     @Path("/countWorkers/{id}")
     public Response getCountWorkersByOrganization(@PathParam("id") Long orgId) {

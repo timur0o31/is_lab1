@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
-@Transactional
+
 @ApplicationScoped
 public class PersonService {
     @Inject
@@ -23,16 +23,16 @@ public class PersonService {
     private PersonMapper personMapper;
     @Inject
     private UploadMapper uploadMapper;
+    @Transactional
+    public PersonResponseDto createPerson(PersonRequestDto personRequestDto) {
+        Person person = personMapper.toCreateEntity(personRequestDto);
+        this.checkCreateUniqueConstraint(person);
+        personDao.save(person);
+        return personMapper.toResponseDto(person);
+    }
     public PersonService() {
     }
-
-    public PersonResponseDto createPerson(PersonRequestDto personRequestDto) {
-            Person person = personMapper.toCreateEntity(personRequestDto);
-            this.checkCreateUniqueConstraint(person);
-            personDao.save(person);
-            return personMapper.toResponseDto(person);
-    }
-
+    @Transactional
     public PersonResponseDto updatePerson(Long id, PersonRequestDto personRequestDto) {
         Person person = personDao.find(id);
         if (person == null) {
@@ -43,7 +43,7 @@ public class PersonService {
         personDao.update(person);
         return personMapper.toResponseDto(person);
     }
-
+    @Transactional
     public void deletePerson(Long id) {
         Person person = personDao.find(id);
         if (person == null) {
@@ -83,5 +83,8 @@ public class PersonService {
         if (personDB!= null && personDB.getId()!=person.getId()){
             throw new DomainException("Человек с данным passportId уже существует!");
         }
+    }
+    public PersonResponseDto getPersonByPassportId(String passportId){
+        return personMapper.toResponseDto(personDao.existByPassportId(passportId));
     }
 }

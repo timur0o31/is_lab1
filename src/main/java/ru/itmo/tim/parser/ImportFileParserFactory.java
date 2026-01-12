@@ -12,16 +12,8 @@ import java.util.List;
 public class ImportFileParserFactory {
     @Inject
     JsonImportFileParser jsonImportFileParser;
-    @Inject
-    CsvImportFileParser csvImportFileParser;
-    public WorkerImportFileParser getParser(FileFormat format) {
-        switch (format) {
-            case JSON:
-                return jsonImportFileParser;
-            case CSV:
-                return csvImportFileParser;
-            default:
-                throw new IllegalArgumentException("Неподдерживаемый формат: " + format);
-        }
+
+    public WorkerImportFileParser getParser() {
+        return jsonImportFileParser;
     }
 }

@@ -4,10 +4,7 @@ import ru.itmo.tim.dao.ImportOperationDao;
 import ru.itmo.tim.dao.OrganizationDao;
 import ru.itmo.tim.dao.PersonDao;
 import ru.itmo.tim.dao.WorkerDao;
-import ru.itmo.tim.entity.ImportOperation;
-import ru.itmo.tim.entity.Organization;
-import ru.itmo.tim.entity.Person;
-import ru.itmo.tim.entity.Worker;
+import ru.itmo.tim.entity.*;
 import ru.itmo.tim.enums.Status;
 import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.mapper.ImportOperationMapper;
@@ -24,6 +21,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @ApplicationScoped
 public class ImportOperationService {
@@ -46,7 +44,7 @@ public class ImportOperationService {
     public ImportOperationService() {}
     @Transactional
     public List<Worker> importWorkers(ImportOperationRequestDto dto){
-        WorkerImportFileParser parser = parserFactory.getParser(dto.getFileFormat());
+        WorkerImportFileParser parser = parserFactory.getParser();
         List<Worker> ans = new ArrayList<>();
         String messageError = "";
         try{
@@ -108,9 +106,48 @@ public class ImportOperationService {
         return importOperationDao.countAll(filters);
     }
     public void isSamePerson(Person person, Person personreference){
-        return person.getNationality()==personreference.getNationality() &&
+        if (!samePerson(person,personreference)) throw new DomainException("Person с passportId=" + person.getPassportId()
+                + " уже существует с другими полями");
     }
     public void isSameOrganization(Organization organization, Organization organizationReference){
+        if (!sameOrganization(organization, organizationReference)){
+            throw new DomainException("Organization с fullName=" + organization.getFullName()
+            + " уже существует с другими полями");
+        }
+    }
+    private boolean samePerson(Person person, Person person1){
+        return Objects.equals(person.getNationality(), person1.getNationality())
+                && Objects.equals(person.getEyeColor(), person1.getEyeColor())
+                && Objects.equals(person.getHairColor(), person1.getHairColor())
+                && sameLocation(person.getLocation(), person1.getLocation());
+    }
+    private boolean sameOrganization(Organization left, Organization right) {
+        return Objects.equals(left.getAnnualTurnover(), right.getAnnualTurnover())
+                && Objects.equals(left.getEmployeesCount(), right.getEmployeesCount())
+                && Objects.equals(left.getRating(), right.getRating())
+                && sameAddress(left.getOfficialAddress(), right.getOfficialAddress())
+                && sameAddress(left.getPostalAddress(), right.getPostalAddress());
+    }
+    private boolean sameLocation(Location left, Location right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return Objects.equals(left.getX(), right.getX())
+                && Objects.equals(left.getY(), right.getY())
+                && Objects.equals(left.getZ(), right.getZ());
+    }
+    private boolean sameAddress(Address left, Address right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return Objects.equals(left.getStreet(), right.getStreet())
+                && Objects.equals(left.getZipCode(), right.getZipCode());
     }
     @Transactional
     public ImportOperationResponseDto persist(Status status, Long count, String message){

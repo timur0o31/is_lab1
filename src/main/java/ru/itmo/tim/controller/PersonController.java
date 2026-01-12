@@ -110,4 +110,16 @@ public class PersonController {
                         .build();
         }
     }
+    @GET
+    @Path("/passport/{passportId}")
+    public Response getByPassportId(@PathParam("passportId") String passportId){
+        try {
+            PersonResponseDto personResponseDto = personService.getPersonByPassportId(passportId);
+            return Response.ok(personResponseDto).build();
+        }catch(Exception e){
+            return Response.status(Response.Status.NOT_FOUND)
+                    .entity(Map.of("error", e.getMessage()))
+                    .build();
+            }
+    }
 }

@@ -63,19 +63,19 @@ public class ImportOperationController {
         List<String> invalid = new ArrayList<>();
         if (id != null){
             try{
-                filters.put("id",Integer.parseInt(id));
+                filters.put("id",Long.parseLong(id));
             }catch(NumberFormatException e){
                 invalid.add(id);
             }
         }
         if (count != null){
             try{
-                filters.put("count", Integer.parseInt(count));
+                filters.put("count", Long.parseLong(count));
             }catch(NumberFormatException e){
                 invalid.add(count);
             }
         }
-        if (status != null) filters.put(status, Status.valueOf(status));
+        if (status != null) filters.put("status", Status.valueOf(status));
         if (message != null && !message.isEmpty())filters.put("message", message);
         if (!invalid.isEmpty()) return Response.status(Response.Status.BAD_REQUEST)
                 .entity(Map.of("error", "Некорректные фильтры", "invalidFields", invalid))

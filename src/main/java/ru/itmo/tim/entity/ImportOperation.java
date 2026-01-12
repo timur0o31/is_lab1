@@ -13,6 +13,7 @@ public class ImportOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
     @Column(nullable = false)

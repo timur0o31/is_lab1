@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Иван Соколов",
+    "coordinates": {
+      "x": -45,
+      "y": 200
+    },
+    "organization": {
+      "officialAddress": {
+        "street": "Литейный проспект, 15",
+        "zipCode": "191028"
+      },
+      "annualTurnover": 2450000.0,
+      "employeesCount": 120,
+      "fullName": "АО Северные Технологии",
+      "rating": 4.2,
+      "postalAddress": {
+        "street": "Абонентский ящик 42",
+        "zipCode": "191030"
+      }
+    },
+    "salary": 98000.0,
+    "rating": 4,
+    "position": "DEVELOPER",
+    "person": {
+      "eyeColor": "RED",
+      "hairColor": "BLACK",
+      "location": {
+        "x": -5,
+        "y": 12,
+        "z": 8
+      },
+      "passportId": "CD9876543",
+      "nationality": "GERMANY"
+    },
+    "startDate": "2025-03-10T10:30:00",
+    "endDate": "2026-03-10"
+  }
+]
