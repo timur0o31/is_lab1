@@ -7,6 +7,7 @@ import ru.itmo.tim.dao.WorkerDao;
 import ru.itmo.tim.entity.*;
 import ru.itmo.tim.enums.Status;
 import ru.itmo.tim.exception.DomainException;
+import ru.itmo.tim.exception.UniqueViolationException;
 import ru.itmo.tim.mapper.ImportOperationMapper;
 import ru.itmo.tim.parser.ImportFileParserFactory;
 import ru.itmo.tim.parser.UploadMapper;
@@ -14,6 +15,7 @@ import ru.itmo.tim.parser.WorkerImportFileParser;
 import ru.itmo.tim.parser.upload.UploadWorker;
 import ru.itmo.tim.requestDto.ImportOperationRequestDto;
 import ru.itmo.tim.responseDto.ImportOperationResponseDto;
+import ru.itmo.tim.utils.TxIsolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -39,11 +41,12 @@ public class ImportOperationService {
     private ImportOperationMapper importOperationMapper;
     @Inject
     private ImportFileParserFactory parserFactory;
-
-
+    @Inject
+    private TxIsolation txIsolation;
     public ImportOperationService() {}
     @Transactional
     public List<Worker> importWorkers(ImportOperationRequestDto dto){
+        txIsolation.setLocalSerializable();
         WorkerImportFileParser parser = parserFactory.getParser();
         List<Worker> ans = new ArrayList<>();
         String messageError = "";
@@ -58,8 +61,7 @@ public class ImportOperationService {
                     }
                     Person personReference = personDao.existByPassportId(person.getPassportId());
                     if (personReference!=null){
-                        isSamePerson(person,personReference);
-                        worker.setPerson(personReference);
+                        throw new UniqueViolationException("Нарушение ограничения уникальности по passportId. Для worker c name: "+worker.getName()+" нельзя создать person с таким же passportId:"+upload.getPerson().getPassportId()); //isSamePerson(person,personReference);
                     }else {
                         personDao.save(person);
                         worker.setPerson(person);
@@ -69,8 +71,7 @@ public class ImportOperationService {
                     var organization = uploadMapper.toEntity(upload.getOrganization());
                     Organization organizationReference = organizationDao.existByName(upload.getOrganization().getFullName());
                     if (organizationReference!=null){
-                        isSameOrganization(organization, organizationReference);
-                        worker.setOrganization(organizationReference);
+                        throw new UniqueViolationException("Нарушение ограничения уникальности по fullName. Для worker с name:"+worker.getName()+"нельзя создать organization с таким же fullName:"+upload.getOrganization().getFullName()); //isSameOrganization(organization, organizationReference);
                     }
                     else{
                         if (upload.getOrganization().getOfficialAddress() != null) {
@@ -149,7 +150,7 @@ public class ImportOperationService {
         return Objects.equals(left.getStreet(), right.getStreet())
                 && Objects.equals(left.getZipCode(), right.getZipCode());
     }
-    @Transactional
+    @Transactional(Transactional.TxType.REQUIRES_NEW)
     public ImportOperationResponseDto persist(Status status, Long count, String message){
         ImportOperation importOperation = new ImportOperation();
         importOperation.setCount(count);

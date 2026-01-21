@@ -38,7 +38,6 @@ public class PersonDao extends GenericDao<Person> {
                 .setParameter("pid", personId).getSingleResult();
         return count > 0;
     }
-    @Transactional
     public Person existByPassportId(String passportId){
         try {
             TypedQuery<Person> query = entityManager.createQuery("SELECT p FROM Person p WHERE p.passportId= :passportId", Person.class)

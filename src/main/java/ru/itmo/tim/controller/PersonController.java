@@ -8,7 +8,6 @@ import ru.itmo.tim.requestDto.PersonRequestDto;
 import ru.itmo.tim.responseDto.PersonResponseDto;
 import ru.itmo.tim.websocket.WebSocket;
 
-import javax.ejb.EJBException;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.validation.Valid;
@@ -30,7 +29,7 @@ public class PersonController {
     @POST
     public Response createPerson(@Valid PersonRequestDto dto) {
         try {
-            PersonResponseDto person = personService.createPerson(dto);
+            PersonResponseDto person =  personService.createPerson(dto);
             WebSocket.broadcast("person");
             return Response.ok(person).build();
         } catch (IllegalArgumentException e) {

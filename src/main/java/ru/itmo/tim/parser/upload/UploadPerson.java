@@ -7,6 +7,7 @@ import lombok.Setter;
 import ru.itmo.tim.enums.Color;
 import ru.itmo.tim.enums.Country;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 @Getter
@@ -16,6 +17,7 @@ import javax.validation.constraints.Size;
 public class UploadPerson {
     private Color eyeColor;
     private Color hairColor;
+    @Valid
     private UploadLocation location;
     @Size(min = 7, message ="длина строки должна быть больше 6")
     @Pattern(regexp=".*\\S.*", message="строка не может быть пустой или состоять только из пробелов")

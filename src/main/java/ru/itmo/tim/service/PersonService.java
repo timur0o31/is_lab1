@@ -3,10 +3,12 @@ package ru.itmo.tim.service;
 import ru.itmo.tim.dao.PersonDao;
 import ru.itmo.tim.entity.Person;
 import ru.itmo.tim.exception.DomainException;
+import ru.itmo.tim.exception.UniqueViolationException;
 import ru.itmo.tim.mapper.PersonMapper;
 import ru.itmo.tim.parser.UploadMapper;
 import ru.itmo.tim.requestDto.PersonRequestDto;
 import ru.itmo.tim.responseDto.PersonResponseDto;
+import ru.itmo.tim.utils.TxIsolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -23,8 +25,11 @@ public class PersonService {
     private PersonMapper personMapper;
     @Inject
     private UploadMapper uploadMapper;
+    @Inject
+    private TxIsolation txIsolation;
     @Transactional
     public PersonResponseDto createPerson(PersonRequestDto personRequestDto) {
+        txIsolation.setLocalSerializable();
         Person person = personMapper.toCreateEntity(personRequestDto);
         this.checkCreateUniqueConstraint(person);
         personDao.save(person);
@@ -34,6 +39,7 @@ public class PersonService {
     }
     @Transactional
     public PersonResponseDto updatePerson(Long id, PersonRequestDto personRequestDto) {
+        txIsolation.setLocalRepeatableRead();
         Person person = personDao.find(id);
         if (person == null) {
             throw new IllegalArgumentException("Person not found");
@@ -45,6 +51,7 @@ public class PersonService {
     }
     @Transactional
     public void deletePerson(Long id) {
+        txIsolation.setLocalRepeatableRead();
         Person person = personDao.find(id);
         if (person == null) {
             throw new IllegalArgumentException("Человек не найден");
@@ -75,15 +82,16 @@ public class PersonService {
     }
     public void checkCreateUniqueConstraint(Person person){
         if (personDao.existByPassportId(person.getPassportId())!=null){
-            throw new DomainException("Человек с данным passportId уже существует!");
+            throw new UniqueViolationException("Человек с данным passportId уже существует!");
         }
     }
     public void checkUpdateUniqueConstraint(Person person, String passportId){
         Person personDB = personDao.existByPassportId(passportId);
         if (personDB!= null && personDB.getId()!=person.getId()){
-            throw new DomainException("Человек с данным passportId уже существует!");
+            throw new UniqueViolationException("Человек с данным passportId уже существует!");
         }
     }
+    @Transactional
     public PersonResponseDto getPersonByPassportId(String passportId){
         return personMapper.toResponseDto(personDao.existByPassportId(passportId));
     }

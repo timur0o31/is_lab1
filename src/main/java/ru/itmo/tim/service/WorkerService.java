@@ -53,7 +53,9 @@ public class WorkerService {
                 throw new DomainException("Рабочего с таким id не существует");
             }
         //Worker other = workerDao.findByPersonId(dto.getPersonId());
+            /*
             if (dto.getPersonId() != worker.getPerson().getId()) throw new DomainException("Изменение Person у существующего Worker запрещено.");
+            */
             workerMapper.toUpdateEntity(worker, dto);
             this.resolveDependencies(dto, worker);
             workerDao.update(worker);

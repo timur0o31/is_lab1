@@ -43,12 +43,6 @@ public class ImportOperationController {
             return Response.status(Response.Status.BAD_REQUEST).entity(Map.of("error", e.getMessage())).build();
         }
     }
-    /*
-    @GET
-    public Response getAllOperations(){
-        List<ImportOperationResponseDto> importOperation = importOperationService.getAllImportOperations();
-        return Response.ok(Map.of("content",importOperation, "totalRecords", importOperation.size())).build();
-    }*/
     @GET
     public Response getAllOpertions(@QueryParam("page") int page,
                                     @QueryParam("size") int size,

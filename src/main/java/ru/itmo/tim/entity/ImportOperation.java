@@ -18,5 +18,6 @@ public class ImportOperation {
     private Status status;
     @Column(nullable = false)
     private Long count;
+    @Column(length=1000)
     private String message;
 }

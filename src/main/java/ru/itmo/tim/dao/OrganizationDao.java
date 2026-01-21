@@ -41,7 +41,6 @@ public class OrganizationDao extends GenericDao<Organization> {
         BuilderQueryForGetAll.setQueryParameters(query,filters);
         return query.getSingleResult();
     }
-    @Transactional
     public Organization existByName(String fullName){
         try{
             TypedQuery<Organization> query = entityManager.createQuery("SELECT org FROM Organization org WHERE org.fullName= :fullName", Organization.class)
