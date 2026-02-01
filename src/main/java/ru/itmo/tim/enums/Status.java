@@ -1,5 +1,5 @@
 package ru.itmo.tim.enums;
 
 public enum Status {
-    ACCEPT, REJECT
+    SUCCESS, FAILED, FAILED_INTERNAL
 }

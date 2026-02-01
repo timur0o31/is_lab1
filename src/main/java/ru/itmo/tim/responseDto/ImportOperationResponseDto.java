@@ -11,5 +11,6 @@ public class ImportOperationResponseDto {
     private Status status;
     private Long count;
     private String message;
+    private String fileName;
     public ImportOperationResponseDto() {}
 }

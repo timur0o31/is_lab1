@@ -5,26 +5,35 @@
                                  http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
 
-    <persistence-unit name="lab1" transaction-type="JTA">
+    <persistence-unit name="lab1" transaction-type="JTA"> <!-- RESOURCE_LOCAL -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <jta-data-source>java:/PostgresDS</jta-data-source>
-        <non-jta-data-source>java:/PostgresDS</non-jta-data-source>
-        <class>ru.itmo.tim.dao.GenericDao</class>
+        <!--<non-jta-data-source>java:/PostgresDS</non-jta-data-source> -->
         <class>ru.itmo.tim.entity.Address</class>
         <class>ru.itmo.tim.entity.Coordinates</class>
         <class>ru.itmo.tim.entity.Location</class>
         <class>ru.itmo.tim.entity.Organization</class>
         <class>ru.itmo.tim.entity.Person</class>
         <class>ru.itmo.tim.entity.Worker</class>
+        <class>ru.itmo.tim.entity.ImportOperation</class>
         <properties>
             <property name="hibernate.hbm2ddl.auto" value="update"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQL95Dialect"/>
-      <!--  <property name="javax.persistence.schema-generation.drop-source" value="metadata-then-script"/>
-            <property name="javax.persistence.schema-generation.drop-script-source" value="sql/drop.sql"/>
-            <property name="javax.persistence.schema-generation.create-source" value="metadata-then-script"/>
-            <property name="javax.persistence.schema-generation.create-script-source" value="sql/func.sql"/> -->
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
+
+            <property name="jakarta.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
+            <property name="hibernate.cache.use_second_level_cache" value="true"/>
+            <property name="hibernate.cache.use_query_cache" value="true"/>
+            <property name="hibernate.cache.region.factory_class"
+                      value="org.hibernate.cache.infinispan.InfinispanRegionFactory"/>
+            <property name="hibernate.javax.cache.provider"
+                      value="org.infinispan.jcache.embedded.JCachingProvider"/>
+            <property name="hibernate.cache.infinispan.statistics" value="true"/>
+            <property name="hibernate.generate_statistics" value="true"/>
+            <property name="hibernate.cache.infinispan.entity.eviction.strategy" value="LRU"/>
+            <property name="hibernate.cache.infinispan.entity.eviction.max_entries" value="10000"/>
+            <property name="hibernate.cache.infinispan.entity.expiration.lifespan" value="600000"/>
+            <property name="hibernate.cache.infinispan.entity.expiration.max_idle" value="300000"/>
         </properties>
     </persistence-unit>
 </persistence>

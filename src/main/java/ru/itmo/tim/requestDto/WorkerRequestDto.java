@@ -31,7 +31,7 @@ public class WorkerRequestDto {
     @NotNull(message="Персона должна быть указана")
     private Long personId;
     @NotNull(message="Дата начала работы не может быть null")
-    private LocalDateTime startDate;
-    private LocalDate endDate;
+    private String startDate;
+    private String endDate;
     public WorkerRequestDto() {}
 }

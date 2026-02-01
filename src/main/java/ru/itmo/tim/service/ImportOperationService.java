@@ -20,6 +20,8 @@ import ru.itmo.tim.utils.TxIsolation;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -43,15 +45,31 @@ public class ImportOperationService {
     private ImportFileParserFactory parserFactory;
     @Inject
     private TxIsolation txIsolation;
+    @Inject
+    private MinioService minioService;
+    @Inject
+    private ImportOperationLogService importOperationLogService;
     public ImportOperationService() {}
     @Transactional
-    public List<Worker> importWorkers(ImportOperationRequestDto dto){
+    public ImportOperationResponseDto importWorkers(ImportOperationRequestDto dto) throws Exception{
         txIsolation.setLocalSerializable();
         WorkerImportFileParser parser = parserFactory.getParser();
         List<Worker> ans = new ArrayList<>();
-        String messageError = "";
+        byte[] fileData;
+        String fileKey=null;
         try{
-            List<UploadWorker> workers = parser.parse(dto.getFileStream());
+            fileData = dto.getFileStream().readAllBytes();
+            try {
+                fileKey = minioService.saveFile(
+                        new ByteArrayInputStream(fileData),
+                        dto.getFileName(),
+                        fileData.length
+                );
+            } catch (Exception e) {
+                importOperationLogService.persist(Status.FAILED_INTERNAL,(long) 0,e.getMessage(),fileKey,null);
+                throw new RuntimeException("MinIO unable: " + e.getMessage());
+            }
+            List<UploadWorker> workers = parser.parse(new ByteArrayInputStream(fileData));
             for (UploadWorker upload : workers) {
                 Worker worker = uploadMapper.toEntity(upload);
                 if (upload.getPerson()!=null){
@@ -61,7 +79,8 @@ public class ImportOperationService {
                     }
                     Person personReference = personDao.existByPassportId(person.getPassportId());
                     if (personReference!=null){
-                        throw new UniqueViolationException("Нарушение ограничения уникальности по passportId. Для worker c name: "+worker.getName()+" нельзя создать person с таким же passportId:"+upload.getPerson().getPassportId()); //isSamePerson(person,personReference);
+                        String errorMessage = "Нарушение ограничения уникальности по passportId. Для worker c name: "+worker.getName()+" нельзя создать person с таким же passportId:"+upload.getPerson().getPassportId();
+                        throw new UniqueViolationException(errorMessage); //isSamePerson(person,personReference);
                     }else {
                         personDao.save(person);
                         worker.setPerson(person);
@@ -71,7 +90,8 @@ public class ImportOperationService {
                     var organization = uploadMapper.toEntity(upload.getOrganization());
                     Organization organizationReference = organizationDao.existByName(upload.getOrganization().getFullName());
                     if (organizationReference!=null){
-                        throw new UniqueViolationException("Нарушение ограничения уникальности по fullName. Для worker с name:"+worker.getName()+"нельзя создать organization с таким же fullName:"+upload.getOrganization().getFullName()); //isSameOrganization(organization, organizationReference);
+                        String errorMessage = "Нарушение ограничения уникальности по fullName. Для worker с name:"+worker.getName()+"нельзя создать organization с таким же fullName:"+upload.getOrganization().getFullName();
+                        throw new UniqueViolationException(errorMessage); //isSameOrganization(organization, organizationReference);
                     }
                     else{
                         if (upload.getOrganization().getOfficialAddress() != null) {
@@ -91,9 +111,10 @@ public class ImportOperationService {
                 workerDao.save(worker);
             }
         }catch(Exception e){
+            importOperationLogService.persist(Status.FAILED, (long) 0, e.getMessage(), fileKey, dto.getFileName());
             throw e;
         }
-        return ans;
+        return importOperationLogService.persist(Status.SUCCESS,(long) ans.size(),"",fileKey,dto.getFileName());
     }
     public List<ImportOperationResponseDto>getAllImportOperations(){
         return importOperationDao.getAllOperations().stream()
@@ -150,13 +171,21 @@ public class ImportOperationService {
         return Objects.equals(left.getStreet(), right.getStreet())
                 && Objects.equals(left.getZipCode(), right.getZipCode());
     }
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
-    public ImportOperationResponseDto persist(Status status, Long count, String message){
-        ImportOperation importOperation = new ImportOperation();
-        importOperation.setCount(count);
-        importOperation.setStatus(status);
-        if (!message.isEmpty()) importOperation.setMessage(message);
-        importOperationDao.save(importOperation);
-        return importOperationMapper.toResponseDto(importOperation);
+    public ImportOperationResponseDto getImportOperationById(Long id){
+        return importOperationMapper.toResponseDto(importOperationDao.find(id));
+    }
+    public InputStream downloadImportFile(Long importId) throws Exception{
+        ImportOperation operation = importOperationDao.find(importId);
+        if (operation == null){
+            throw new RuntimeException("Import operation not found");
+        }
+        if (operation.getFileKey() == null){
+            throw new RuntimeException("File not found for this operation");
+        }
+        try{
+            return minioService.getFile(operation.getFileKey());
+        }catch(Exception e){
+            throw new RuntimeException("MinIO storage unavailable " + e.getMessage());
+        }
     }
 }

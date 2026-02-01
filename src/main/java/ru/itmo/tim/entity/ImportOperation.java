@@ -20,4 +20,8 @@ public class ImportOperation {
     private Long count;
     @Column(length=1000)
     private String message;
+    @Column(name="file_key")
+    private String fileKey;
+    @Column(name="file_name")
+    private String fileName;
 }

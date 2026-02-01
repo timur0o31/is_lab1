@@ -13,6 +13,7 @@ public class ImportOperationMapper {
         dto.setId(importOperation.getId());
         dto.setStatus(importOperation.getStatus());
         dto.setCount(importOperation.getCount());
+        dto.setFileName(importOperation.getFileName());
         dto.setMessage(importOperation.getMessage());
         return dto;
     }

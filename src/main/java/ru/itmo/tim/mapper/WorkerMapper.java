@@ -7,6 +7,8 @@ import ru.itmo.tim.utils.ParserForFloatValue;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @ApplicationScoped
 public class WorkerMapper {
@@ -23,13 +25,13 @@ public class WorkerMapper {
         responseDto.setId(worker.getId());
         responseDto.setName(worker.getName());
         responseDto.setCoordinates(coordinatesMapper.toResponseDto(worker.getCoordinates()));
-        responseDto.setCreationDate(worker.getCreationDate());
+        responseDto.setCreationDate(worker.getCreationDate().toString());
         responseDto.setOrganizationId(worker.getOrganization().getId());
         responseDto.setPosition(worker.getPosition());
         responseDto.setSalary(worker.getSalary());
         responseDto.setRating(worker.getRating());
-        responseDto.setStartDate(worker.getStartDate());
-        responseDto.setEndDate(worker.getEndDate());
+        responseDto.setStartDate(worker.getStartDate().toString());
+        responseDto.setEndDate(worker.getEndDate() == null ? null : worker.getEndDate().toString());
         responseDto.setPersonId(worker.getPerson().getId());
         return responseDto;
     }
@@ -40,8 +42,8 @@ public class WorkerMapper {
         worker.setSalary(ParserForFloatValue.safeFloat(dto.getSalary(),"Зарплата"));
         worker.setRating(dto.getRating());
         worker.setPosition(dto.getPosition());
-        worker.setStartDate(dto.getStartDate());
-        worker.setEndDate(dto.getEndDate());
+        worker.setStartDate(LocalDateTime.parse(dto.getStartDate()));
+        worker.setEndDate(dto.getEndDate() == null ? null : LocalDate.parse(dto.getEndDate()));
         worker.setCoordinates(coordinatesMapper.toCreate(dto.getCoordinates()));
         return worker;
     }
@@ -51,8 +53,8 @@ public class WorkerMapper {
         worker.setSalary(ParserForFloatValue.safeFloat(dto.getSalary(),"Зарплата"));
         worker.setRating(dto.getRating());
         worker.setPosition(dto.getPosition());
-        worker.setStartDate(dto.getStartDate());
-        worker.setEndDate(dto.getEndDate());
+        worker.setStartDate(LocalDateTime.parse(dto.getStartDate()));
+        worker.setEndDate(dto.getEndDate() == null ? null : LocalDate.parse(dto.getEndDate()));
         worker.setCoordinates(coordinatesMapper.toCreate(dto.getCoordinates()));
     }
 }
