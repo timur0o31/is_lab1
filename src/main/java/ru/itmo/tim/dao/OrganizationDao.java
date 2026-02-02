@@ -16,38 +16,61 @@ public class OrganizationDao extends GenericDao<Organization> {
         super(Organization.class);
     }
     public long countWorkers(Long orgId){
-        return entityManager.createQuery(
-                "SELECT COUNT(w) FROM Worker w WHERE w.organization.id = :id", Long.class)
-                .setParameter("id", orgId)
-                .getSingleResult();
+        var entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery(
+                            "SELECT COUNT(w) FROM Worker w WHERE w.organization.id = :id", Long.class)
+                    .setParameter("id", orgId)
+                    .getSingleResult();
+        }finally{
+            entityManager.close();
+        }
     }
     public List<Organization> findOtherOrganizations(Long excludeId) {
-        return entityManager.createQuery("SELECT o FROM Organization o WHERE o.id <> :excludeId", Organization.class)
-                .setParameter("excludeId", excludeId)
-                .getResultList();
+        var entityManager = getEntityManager();
+        try {
+            return entityManager.createQuery("SELECT o FROM Organization o WHERE o.id <> :excludeId", Organization.class)
+                    .setParameter("excludeId", excludeId)
+                    .getResultList();
+        }finally{
+            entityManager.close();
+        }
     }
     public List<Organization> getAll(int page, int size, String sortColumn, boolean sortDirection, Map<String, Object> filters) {
-        String queryBuilder = BuilderQueryForGetAll.buildQuery("o","Organization",filters,sortColumn,sortDirection);
-        TypedQuery<Organization> query = entityManager.createQuery(queryBuilder, Organization.class);
-        BuilderQueryForGetAll.setQueryParameters(query,filters);
-        query.setFirstResult((page - 1) * size);
-        query.setMaxResults(size);
-        return query.getResultList();
+        var entityManager = getEntityManager();
+        try {
+            String queryBuilder = BuilderQueryForGetAll.buildQuery("o", "Organization", filters, sortColumn, sortDirection);
+            TypedQuery<Organization> query = entityManager.createQuery(queryBuilder, Organization.class);
+            BuilderQueryForGetAll.setQueryParameters(query, filters);
+            query.setFirstResult((page - 1) * size);
+            query.setMaxResults(size);
+            return query.getResultList();
+        }finally{
+            entityManager.close();
+        }
     }
     public long countAll(Map<String, Object> filters) {
-        StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(org) FROM Organization org WHERE 1=1");
-        queryBuilder.append(BuilderQueryForGetAll.buildWhereClause(filters, "org"));
-        TypedQuery<Long> query = entityManager.createQuery(queryBuilder.toString(), Long.class);
-        BuilderQueryForGetAll.setQueryParameters(query,filters);
-        return query.getSingleResult();
+        var entityManager = getEntityManager();
+        try {
+            StringBuilder queryBuilder = new StringBuilder("SELECT COUNT(org) FROM Organization org WHERE 1=1");
+            queryBuilder.append(BuilderQueryForGetAll.buildWhereClause(filters, "org"));
+            TypedQuery<Long> query = entityManager.createQuery(queryBuilder.toString(), Long.class);
+            BuilderQueryForGetAll.setQueryParameters(query, filters);
+            return query.getSingleResult();
+        } finally {
+            entityManager.close();
+        }
     }
     public Organization existByName(String fullName){
+        var entityManager = getEntityManager();
         try{
             TypedQuery<Organization> query = entityManager.createQuery("SELECT org FROM Organization org WHERE org.fullName= :fullName", Organization.class)
                     .setParameter("fullName", fullName);
             return query.getSingleResult();
         }catch(NoResultException e){
             return null;
+        }finally{
+            entityManager.close();
         }
     }
 }

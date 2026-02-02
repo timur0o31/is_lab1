@@ -2,11 +2,12 @@ package ru.itmo.tim.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.itmo.tim.enums.Color;
 import ru.itmo.tim.enums.Country;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import org.hibernate.annotations.Cache;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -14,6 +15,8 @@ import java.util.List;
 @Table(name = "person")
 @Getter
 @Setter
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

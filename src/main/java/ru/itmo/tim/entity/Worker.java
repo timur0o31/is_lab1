@@ -1,5 +1,6 @@
 package ru.itmo.tim.entity;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import ru.itmo.tim.enums.Position;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -10,9 +11,11 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import org.hibernate.annotations.Cache;
 @Entity
 @Table(name = "worker")
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Worker {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

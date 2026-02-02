@@ -1,48 +1,36 @@
 package ru.itmo.tim.service;
 
+import ru.itmo.tim.cache.CacheStatisticsLogging;
 import ru.itmo.tim.dao.OrganizationDao;
 import ru.itmo.tim.entity.Organization;
-import ru.itmo.tim.entity.Person;
-import ru.itmo.tim.exception.DomainException;
 import ru.itmo.tim.exception.UniqueViolationException;
 import ru.itmo.tim.mapper.OrganizationMapper;
-import ru.itmo.tim.parser.UploadMapper;
-import ru.itmo.tim.parser.upload.UploadOrganization;
-import ru.itmo.tim.parser.upload.UploadWorker;
 import ru.itmo.tim.requestDto.OrganizationRequestDto;
 import ru.itmo.tim.responseDto.OrganizationResponseDto;
 import ru.itmo.tim.utils.TxIsolation;
 
-import javax.ejb.Stateless;
-import javax.ejb.TransactionAttribute;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
+@CacheStatisticsLogging
 @ApplicationScoped
 public class OrganizationService {
     @Inject
     private OrganizationDao organizationDao;
     @Inject
     private OrganizationMapper organizationMapper;
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+    @Inject
+    private TxIsolation txIsolation;
     public OrganizationResponseDto createOrganization(OrganizationRequestDto dto) {
-        txIsolation.setLocalRepeatableRead();
         Organization organization = organizationMapper.toCreateEntity(dto);
         this.checkConstraint(organization);
         organizationDao.save(organization);
         return organizationMapper.toResponseDto(organization);
     }
-    @Inject
-    private UploadMapper uploadMapper;
 
-    @Inject
-    private TxIsolation txIsolation;
-    @Transactional
     public OrganizationResponseDto updateOrganization(Long  id, OrganizationRequestDto dto) {
-        txIsolation.setLocalRepeatableRead();
         Organization organization = organizationDao.find(id);
         if (organization == null) {
             throw new IllegalArgumentException("Organization not found");
@@ -56,9 +44,8 @@ public class OrganizationService {
     public Long countWorkers(Long id) {
         return organizationDao.countWorkers(id);
     }
-    @Transactional
+
     public void deleteOrganizationWithWorkers(Long id, Long transferToId) {
-        txIsolation.setLocalRepeatableRead();
         Organization organization = organizationDao.find(id);
         if (organization == null) {
             throw new IllegalArgumentException("Organization not found");
@@ -101,7 +88,6 @@ public class OrganizationService {
                 .map(organizationMapper::toResponseDto)
                 .toList();
     }
-    @Transactional
     public OrganizationResponseDto getOrganizationByFullName(String fullName){
         return organizationMapper.toResponseDto(organizationDao.existByName(fullName));
     }

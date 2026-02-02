@@ -1,5 +1,6 @@
 package ru.itmo.tim.service;
 
+import ru.itmo.tim.cache.CacheStatisticsLogging;
 import ru.itmo.tim.dao.ImportOperationDao;
 import ru.itmo.tim.dao.OrganizationDao;
 import ru.itmo.tim.dao.PersonDao;
@@ -26,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
+@CacheStatisticsLogging
 @ApplicationScoped
 public class ImportOperationService {
     @Inject
@@ -52,7 +53,6 @@ public class ImportOperationService {
     public ImportOperationService() {}
     @Transactional
     public ImportOperationResponseDto importWorkers(ImportOperationRequestDto dto) throws Exception{
-        txIsolation.setLocalSerializable();
         WorkerImportFileParser parser = parserFactory.getParser();
         List<Worker> ans = new ArrayList<>();
         byte[] fileData;

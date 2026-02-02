@@ -1,12 +1,14 @@
 package ru.itmo.tim.cache;
 
+import org.hibernate.Session;
 import org.hibernate.stat.Statistics;
+import ru.itmo.tim.DatabaseInitializier;
 
 import javax.inject.Inject;
 import javax.interceptor.AroundInvoke;
 import javax.interceptor.Interceptor;
 import javax.interceptor.InvocationContext;
-import javax.jms.Session;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.util.logging.Logger;
@@ -42,10 +44,10 @@ public class CacheStatisticsInterceptor {
            // logCacheStats(context.getMethod().getName(), executionTime);
         }
     }
-    /*
+
     private void logCacheStats(String methodName, long executionTime) {
         try {
-            Session session = DatabaseManager.getEntityManager() //заменить на druid
+            Session session = DatabaseInitializier.getEntityManager()
                     .unwrap(Session.class);
 
             Statistics stats = session.getSessionFactory().getStatistics();
@@ -71,5 +73,5 @@ public class CacheStatisticsInterceptor {
         } catch (Exception e) {
             logger.warning("Failed to get cache stats: " + e.getMessage());
         }
-    }*/
+    }
 }

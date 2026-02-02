@@ -1,5 +1,6 @@
 package ru.itmo.tim.service;
 
+import ru.itmo.tim.cache.CacheStatisticsLogging;
 import ru.itmo.tim.dao.PersonDao;
 import ru.itmo.tim.entity.Person;
 import ru.itmo.tim.exception.DomainException;
@@ -12,11 +13,10 @@ import ru.itmo.tim.utils.TxIsolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Map;
 
-
+@CacheStatisticsLogging
 @ApplicationScoped
 public class PersonService {
     @Inject
@@ -27,9 +27,7 @@ public class PersonService {
     private UploadMapper uploadMapper;
     @Inject
     private TxIsolation txIsolation;
-    @Transactional
     public PersonResponseDto createPerson(PersonRequestDto personRequestDto) {
-        txIsolation.setLocalSerializable();
         Person person = personMapper.toCreateEntity(personRequestDto);
         this.checkCreateUniqueConstraint(person);
         personDao.save(person);
@@ -37,9 +35,7 @@ public class PersonService {
     }
     public PersonService() {
     }
-    @Transactional
     public PersonResponseDto updatePerson(Long id, PersonRequestDto personRequestDto) {
-        txIsolation.setLocalRepeatableRead();
         Person person = personDao.find(id);
         if (person == null) {
             throw new IllegalArgumentException("Person not found");
@@ -49,9 +45,7 @@ public class PersonService {
         personDao.update(person);
         return personMapper.toResponseDto(person);
     }
-    @Transactional
     public void deletePerson(Long id) {
-        txIsolation.setLocalRepeatableRead();
         Person person = personDao.find(id);
         if (person == null) {
             throw new IllegalArgumentException("Человек не найден");
@@ -91,7 +85,7 @@ public class PersonService {
             throw new UniqueViolationException("Человек с данным passportId уже существует!");
         }
     }
-    @Transactional
+
     public PersonResponseDto getPersonByPassportId(String passportId){
         return personMapper.toResponseDto(personDao.existByPassportId(passportId));
     }

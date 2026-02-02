@@ -5,7 +5,7 @@
                                  http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
              version="2.2">
 
-    <persistence-unit name="lab1" transaction-type="JTA"> <!-- RESOURCE_LOCAL -->
+    <persistence-unit name="lab1" transaction-type="RESOURCE_LOCAL"> <!-- RESOURCE_LOCAL -->
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <!--<non-jta-data-source>java:/PostgresDS</non-jta-data-source> -->
         <class>ru.itmo.tim.entity.Address</class>

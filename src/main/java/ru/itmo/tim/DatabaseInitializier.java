@@ -9,7 +9,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import javax.sql.DataSource;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -20,8 +19,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @WebListener
-public class DatabaseFunctionsInitializier implements ServletContextListener {
-    private static final Logger logger = Logger.getLogger(DatabaseFunctionsInitializier.class.getName());
+public class DatabaseInitializier implements ServletContextListener {
+    private static final Logger logger = Logger.getLogger(DatabaseInitializier.class.getName());
 
     private static DruidDataSource dataSource;
     private static EntityManagerFactory entityManagerFactory;
@@ -98,11 +97,11 @@ public class DatabaseFunctionsInitializier implements ServletContextListener {
             properties.put("hibernate.dialect", "org.hibernate.dialect.PostgreSQL95Dialect");
             properties.put("hibernate.show_sql", "true");
             properties.put("hibernate.format_sql", "true");
-            properties.put("hibernate.generate_statistics", "false");
-        /*
+            properties.put("hibernate.generate_statistics", "true");
+
             properties.put("hibernate.cache.use_second_level_cache", "true");
             properties.put("hibernate.cache.use_query_cache", "true");
-        */
+
             entityManagerFactory = Persistence.createEntityManagerFactory("lab1", properties);
             logger.info("EntityManagerFactory initialized successfully");
 
@@ -111,7 +110,9 @@ public class DatabaseFunctionsInitializier implements ServletContextListener {
             throw new RuntimeException("EntityManagerFactory initialization failed", e);
         }
     }
-
+    public static EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
     public void safeClose() {
         try {
             if (entityManagerFactory != null && entityManagerFactory.isOpen()) {

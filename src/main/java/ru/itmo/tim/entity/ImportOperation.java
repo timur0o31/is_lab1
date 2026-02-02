@@ -1,6 +1,7 @@
 package ru.itmo.tim.entity;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.itmo.tim.enums.Status;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Table(name = "import_operation")
 @Setter
 @Getter
+@NoArgsConstructor
 public class ImportOperation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

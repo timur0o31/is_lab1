@@ -1,27 +1,27 @@
 package ru.itmo.tim.utils;
 
-import javax.enterprise.context.ApplicationScoped;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
-@ApplicationScoped
-public class TxIsolation {
+public final class TxIsolation {
+    public enum Level {
+        READ_COMMITTED("READ COMMITTED"),
+        REPEATABLE_READ("REPEATABLE READ"),
+        SERIALIZABLE("SERIALIZABLE");
 
-    @PersistenceContext(unitName = "lab1")
-    private EntityManager em;
+        private final String sql;
 
-    public void setLocalRepeatableRead() {
-        em.createNativeQuery("SET LOCAL TRANSACTION ISOLATION LEVEL REPEATABLE READ")
-                .executeUpdate();
+        Level(String sql) {
+            this.sql = sql;
+        }
     }
 
-    public void setLocalSerializable() {
-        em.createNativeQuery("SET LOCAL TRANSACTION ISOLATION LEVEL SERIALIZABLE")
-                .executeUpdate();
-    }
+    private TxIsolation() {}
 
-    public void setLocalReadCommitted() {
-        em.createNativeQuery("SET LOCAL TRANSACTION ISOLATION LEVEL READ COMMITTED")
+    public static void setLocal(EntityManager em, Level level) {
+        if (level == null) {
+            return;
+        }
+        em.createNativeQuery("SET LOCAL TRANSACTION ISOLATION LEVEL " + level.sql)
                 .executeUpdate();
     }
 }
