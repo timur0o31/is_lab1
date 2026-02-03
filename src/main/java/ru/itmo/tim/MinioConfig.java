@@ -15,7 +15,7 @@ public class MinioConfig {
         System.out.println("minio_login=" + System.getProperty("minio_login"));
         System.out.println("minio_password=" + System.getProperty("minio_password"));
         this.minioClient = MinioClient.builder()
-                .endpoint("http://localhost:9000")
+                .endpoint(System.getProperty("minio_endpoint"))
                 .credentials(System.getProperty("minio_login"), System.getProperty("minio_password"))
                 .build();
     }

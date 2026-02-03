@@ -7,14 +7,14 @@ import ru.itmo.tim.mapper.ImportOperationMapper;
 import ru.itmo.tim.responseDto.ImportOperationResponseDto;
 
 import javax.inject.Inject;
-import javax.transaction.Transactional;
+
 
 public class ImportOperationLogService {
     @Inject
     private ImportOperationDao dao;
     @Inject
     private ImportOperationMapper mapper;
-    @Transactional(Transactional.TxType.REQUIRES_NEW)
+
     public ImportOperationResponseDto persist(Status status, Long count, String message, String fileKey, String fileName) {
         ImportOperation op = new ImportOperation();
         op.setStatus(status);

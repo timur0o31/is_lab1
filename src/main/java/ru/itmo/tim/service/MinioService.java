@@ -1,9 +1,6 @@
 package ru.itmo.tim.service;
 
-import io.minio.BucketExistsArgs;
-import io.minio.GetObjectArgs;
-import io.minio.MakeBucketArgs;
-import io.minio.PutObjectArgs;
+import io.minio.*;
 import ru.itmo.tim.MinioConfig;
 
 import javax.inject.Inject;
@@ -52,6 +49,14 @@ public class MinioService {
     public InputStream getFile(String fileKey) throws Exception {
         return minioConfig.getClient().getObject(
                 GetObjectArgs.builder()
+                        .bucket(BUCKET)
+                        .object(fileKey)
+                        .build()
+        );
+    }
+    public void deleteFile(String fileKey) throws Exception{
+        minioConfig.getClient().removeObject(
+                RemoveObjectArgs.builder()
                         .bucket(BUCKET)
                         .object(fileKey)
                         .build()

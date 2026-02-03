@@ -52,8 +52,8 @@ public class DatabaseInitializier implements ServletContextListener {
     private static void initDataSource() {
         try {
             logger.info("Initializing Druid DataSource...");
-            String user = System.getProperty("db.user");
-            String pass = System.getProperty("db.password");
+            String user = System.getProperty("db_user");
+            String pass = System.getProperty("db_password");
             dataSource = new DruidDataSource();
             dataSource.setDriverClassName("org.postgresql.Driver");
             dataSource.setUrl("jdbc:postgresql://localhost:5432/studs");

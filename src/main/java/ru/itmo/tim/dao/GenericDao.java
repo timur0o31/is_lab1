@@ -36,6 +36,9 @@ public abstract class GenericDao<T> {
             entityManager.close();
         }
     }
+    public void save(EntityManager entityManager, T entity) {
+        entityManager.persist(entity);
+    }
     public void delete(T entity) {
         EntityManager em = getEntityManager();
         try {

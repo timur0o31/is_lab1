@@ -1,5 +1,7 @@
 package ru.itmo.tim.service;
 
+import org.hibernate.Session;
+import ru.itmo.tim.DatabaseInitializier;
 import ru.itmo.tim.cache.CacheStatisticsLogging;
 import ru.itmo.tim.dao.ImportOperationDao;
 import ru.itmo.tim.dao.OrganizationDao;
@@ -20,9 +22,12 @@ import ru.itmo.tim.utils.TxIsolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.transaction.Transactional;
+import javax.persistence.Entity;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -51,12 +56,19 @@ public class ImportOperationService {
     @Inject
     private ImportOperationLogService importOperationLogService;
     public ImportOperationService() {}
-    @Transactional
+
     public ImportOperationResponseDto importWorkers(ImportOperationRequestDto dto) throws Exception{
         WorkerImportFileParser parser = parserFactory.getParser();
         List<Worker> ans = new ArrayList<>();
         byte[] fileData;
         String fileKey=null;
+        Status status = Status.FAILED;
+        EntityManager em = DatabaseInitializier.getEntityManager();
+        Session session = em.unwrap(Session.class);
+        session.doWork(conn -> {
+            conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
+        });
+        EntityTransaction transaction = em.getTransaction();
         try{
             fileData = dto.getFileStream().readAllBytes();
             try {
@@ -66,10 +78,11 @@ public class ImportOperationService {
                         fileData.length
                 );
             } catch (Exception e) {
-                importOperationLogService.persist(Status.FAILED_INTERNAL,(long) 0,e.getMessage(),fileKey,null);
-                throw new RuntimeException("MinIO unable: " + e.getMessage());
+                status = Status.FAILED_INTERNAL;
+                throw new RuntimeException("MinIO недоступно: " + e.getMessage());
             }
             List<UploadWorker> workers = parser.parse(new ByteArrayInputStream(fileData));
+            transaction.begin();
             for (UploadWorker upload : workers) {
                 Worker worker = uploadMapper.toEntity(upload);
                 if (upload.getPerson()!=null){
@@ -77,18 +90,18 @@ public class ImportOperationService {
                     if (upload.getPerson().getLocation() != null) {
                         person.setLocation(uploadMapper.toEntity(upload.getPerson().getLocation()));
                     }
-                    Person personReference = personDao.existByPassportId(person.getPassportId());
+                    Person personReference = personDao.existByPassportId(em,person.getPassportId());
                     if (personReference!=null){
                         String errorMessage = "Нарушение ограничения уникальности по passportId. Для worker c name: "+worker.getName()+" нельзя создать person с таким же passportId:"+upload.getPerson().getPassportId();
-                        throw new UniqueViolationException(errorMessage); //isSamePerson(person,personReference);
+                        throw new UniqueViolationException(errorMessage);
                     }else {
-                        personDao.save(person);
+                        personDao.save(em,person);
                         worker.setPerson(person);
                     }
                 }
                 if (upload.getOrganization()!=null){
                     var organization = uploadMapper.toEntity(upload.getOrganization());
-                    Organization organizationReference = organizationDao.existByName(upload.getOrganization().getFullName());
+                    Organization organizationReference = organizationDao.existByName(em,upload.getOrganization().getFullName());
                     if (organizationReference!=null){
                         String errorMessage = "Нарушение ограничения уникальности по fullName. Для worker с name:"+worker.getName()+"нельзя создать organization с таким же fullName:"+upload.getOrganization().getFullName();
                         throw new UniqueViolationException(errorMessage); //isSameOrganization(organization, organizationReference);
@@ -100,7 +113,7 @@ public class ImportOperationService {
                         if (upload.getOrganization().getPostalAddress() != null) {
                             organization.setPostalAddress(uploadMapper.toEntity(upload.getOrganization().getPostalAddress()));
                         }
-                        organizationDao.save(organization);
+                        organizationDao.save(em,organization);
                         worker.setOrganization(organization);
                     }
                 }
@@ -108,13 +121,26 @@ public class ImportOperationService {
                     if (worker.getEndDate().isBefore(worker.getStartDate().toLocalDate())) throw new DomainException(worker.getName() + ": дата окончания работы не может быть раньше трудоустройства");
                 }
                 ans.add(worker);
-                workerDao.save(worker);
+                workerDao.save(em,worker);
             }
+            transaction.commit();
         }catch(Exception e){
-            importOperationLogService.persist(Status.FAILED, (long) 0, e.getMessage(), fileKey, dto.getFileName());
+            if (transaction.isActive()) transaction.rollback();
+            if (fileKey!=null) {
+                try {
+                    minioService.deleteFile(fileKey);
+                } catch (Exception deleteEx) {
+                    System.out.println(deleteEx.getMessage());
+                }
+            }
+            fileKey=null;
+            importOperationLogService.persist(status, (long) 0, e.getMessage(), fileKey, dto.getFileName());
             throw e;
+        } finally{
+            em.close();
         }
-        return importOperationLogService.persist(Status.SUCCESS,(long) ans.size(),"",fileKey,dto.getFileName());
+        status = Status.SUCCESS;
+        return importOperationLogService.persist(status,(long) ans.size(),"",fileKey,dto.getFileName());
     }
     public List<ImportOperationResponseDto>getAllImportOperations(){
         return importOperationDao.getAllOperations().stream()

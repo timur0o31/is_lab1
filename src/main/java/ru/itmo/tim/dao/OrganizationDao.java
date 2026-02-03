@@ -4,6 +4,7 @@ import ru.itmo.tim.utils.BuilderQueryForGetAll;
 import ru.itmo.tim.entity.Organization;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
@@ -71,6 +72,15 @@ public class OrganizationDao extends GenericDao<Organization> {
             return null;
         }finally{
             entityManager.close();
+        }
+    }
+    public Organization existByName(EntityManager entityManager, String fullName){
+        try{
+            TypedQuery<Organization> query = entityManager.createQuery("SELECT org FROM Organization org WHERE org.fullName= :fullName", Organization.class)
+                    .setParameter("fullName", fullName);
+            return query.getSingleResult();
+        }catch(NoResultException e){
+            return null;
         }
     }
 }
