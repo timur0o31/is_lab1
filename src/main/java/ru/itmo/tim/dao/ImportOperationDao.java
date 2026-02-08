@@ -24,6 +24,7 @@ public class ImportOperationDao extends GenericDao<ImportOperation>{
             BuilderQueryForGetAll.setQueryParameters(query, filters);
             query.setFirstResult((page - 1) * size);
             query.setMaxResults(size);
+            query.setHint("org.hibernate.cacheable", true);
             return query.getResultList();
         }finally{
             entityManager.close();

@@ -1,5 +1,6 @@
 package ru.itmo.tim.service;
 
+import ru.itmo.tim.DatabaseInitializier;
 import ru.itmo.tim.cache.CacheStatisticsLogging;
 import ru.itmo.tim.dao.OrganizationDao;
 import ru.itmo.tim.entity.Organization;
@@ -11,6 +12,8 @@ import ru.itmo.tim.utils.TxIsolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import java.util.List;
 import java.util.Map;
 
@@ -21,24 +24,44 @@ public class OrganizationService {
     private OrganizationDao organizationDao;
     @Inject
     private OrganizationMapper organizationMapper;
-    @Inject
-    private TxIsolation txIsolation;
+
     public OrganizationResponseDto createOrganization(OrganizationRequestDto dto) {
-        Organization organization = organizationMapper.toCreateEntity(dto);
-        this.checkConstraint(organization);
-        organizationDao.save(organization);
-        return organizationMapper.toResponseDto(organization);
+        EntityManager em = DatabaseInitializier.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try{
+            tx.begin();
+            this.checkConstraint(em,dto.getFullName());
+            Organization organization = organizationMapper.toCreateEntity(dto);
+            organizationDao.save(em,organization);
+            tx.commit();
+            return organizationMapper.toResponseDto(organization);
+        }catch(Exception e){
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
+        }
     }
 
     public OrganizationResponseDto updateOrganization(Long  id, OrganizationRequestDto dto) {
-        Organization organization = organizationDao.find(id);
-        if (organization == null) {
-            throw new IllegalArgumentException("Organization not found");
+        EntityManager em = DatabaseInitializier.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Organization organization = organizationDao.find(em,id);
+            if (organization == null) {
+                throw new IllegalArgumentException("Organization not found");
+            }
+            this.checkUpdateUniqueConstraint(em,organization, dto.getFullName());
+            organizationMapper.toUpdateEntity(dto, organization);
+            organizationDao.update(em, organization);
+            return organizationMapper.toResponseDto(organization);
+        }catch(Exception e){
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
         }
-        this.checkUpdateUniqueConstraint(organization,dto.getFullName());
-        organizationMapper.toUpdateEntity(dto, organization);
-        organizationDao.update(organization);
-        return organizationMapper.toResponseDto(organization);
     }
 
     public Long countWorkers(Long id) {
@@ -46,22 +69,34 @@ public class OrganizationService {
     }
 
     public void deleteOrganizationWithWorkers(Long id, Long transferToId) {
-        Organization organization = organizationDao.find(id);
-        if (organization == null) {
-            throw new IllegalArgumentException("Organization not found");
-        }
-        if (transferToId != null) {
-            Organization newOrganization = organizationDao.find(transferToId);
-            if (newOrganization == null) {
+        EntityManager em = DatabaseInitializier.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            Organization organization = organizationDao.find(id);
+            if (organization == null) {
                 throw new IllegalArgumentException("Organization not found");
             }
-            organization.getWorkers().forEach(worker -> worker.setOrganization(newOrganization));
-        }else{
-            if(!organization.getWorkers().isEmpty()){
-                throw new IllegalArgumentException("Cannot delete organization with workers.");
+            if (transferToId != null) {
+                Organization newOrganization = organizationDao.find(transferToId);
+                if (newOrganization == null) {
+                    throw new IllegalArgumentException("Organization not found");
+                }
+                organizationDao.moveWorkersToNewOrganization(em, organization, newOrganization);
+            } else {
+                long count = organizationDao.countWorkers(em,organization);
+                if (count>0) {
+                    throw new IllegalArgumentException("Cannot delete organization with workers.");
+                }
             }
+            organizationDao.delete(em,id);
+            tx.commit();
+        }catch (Exception e) {
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
         }
-        organizationDao.delete(organization);
     }
     public OrganizationResponseDto getOrganization(Long id) {
         return organizationMapper.toResponseDto(this.getOrganizationEntity(id));
@@ -91,13 +126,13 @@ public class OrganizationService {
     public OrganizationResponseDto getOrganizationByFullName(String fullName){
         return organizationMapper.toResponseDto(organizationDao.existByName(fullName));
     }
-    public void checkConstraint(Organization organization){
-        if (organizationDao.existByName(organization.getFullName())!=null){
+    public void checkConstraint(EntityManager em,String fullName){
+        if (organizationDao.existByName(em,fullName)!=null){
             throw new UniqueViolationException("Организация с данным именем уже существует!");
         }
     }
-    public void checkUpdateUniqueConstraint(Organization organization, String fullName){
-        Organization organizationDB = organizationDao.existByName(fullName);
+    public void checkUpdateUniqueConstraint(EntityManager em,Organization organization, String fullName){
+        Organization organizationDB = organizationDao.existByName(em,fullName);
         if (organizationDB!=null && organizationDB.getId()!=organization.getId()){
             throw new UniqueViolationException("Организация с данным именем уже существует!");
         }

@@ -6,7 +6,7 @@ import javax.persistence.PersistenceContext;
 
 @ApplicationScoped
 public class CacheManager {
-    private volatile boolean statisticsLoggingEnabled = false;
+    private volatile boolean statisticsLoggingEnabled = true;
 
     public boolean isStatisticsLoggingEnabled() {
         return statisticsLoggingEnabled;

@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="is_lab3" type="JBossConfiguration" factoryName="Local" APPLICATION_SERVER_NAME="JBoss/WildFly 26.1.3.Final" ALTERNATIVE_JRE_ENABLED="false">
-    <option name="BROWSER_ID" value="98ca6316-2f89-46d9-a9e5-fa9e2b0625b3" />
+    <option name="BROWSER_ID" value="e5120d43-2c3f-47ef-9f26-65e539e05186" />
     <option name="COMMON_VM_ARGUMENTS" value="-Ddb_user=s412875 -Ddb_password=QiAY9UEsXML2e3XL -Dminio_login=minioadmin -Dminio_endpoint=http://localhost:9000/ -Dminio_password=minioadmin123" />
     <option name="UPDATING_POLICY" value="restart-server" />
     <deployment>

@@ -21,27 +21,21 @@ public class CacheStatisticsInterceptor {
     private long totalL2Misses = 0;
     private long totalQueryHits = 0;
     private long totalQueryMisses = 0;
-    @PersistenceContext
-    private EntityManager em;
     @Inject
     private CacheManager cacheManager;
     @AroundInvoke
     public Object logCacheStatistics(InvocationContext context) throws Exception {
-        boolean shouldLog = cacheManager.isStatisticsLoggingEnabled(); // заменить на druid
-
+        boolean shouldLog = cacheManager.isStatisticsLoggingEnabled();
         if (!shouldLog) {
             return context.proceed();
         }
-
         long startTime = System.currentTimeMillis();
-
         try {
             Object result = context.proceed();
             return result;
         } finally {
             long executionTime = System.currentTimeMillis() - startTime;
-
-           // logCacheStats(context.getMethod().getName(), executionTime);
+            logCacheStats(context.getMethod().getName(), executionTime);
         }
     }
 
@@ -49,19 +43,15 @@ public class CacheStatisticsInterceptor {
         try {
             Session session = DatabaseInitializier.getEntityManager()
                     .unwrap(Session.class);
-
             Statistics stats = session.getSessionFactory().getStatistics();
-
             long currentL2Hits = stats.getSecondLevelCacheHitCount();
             long currentL2Misses = stats.getSecondLevelCacheMissCount();
             long currentQueryHits = stats.getQueryCacheHitCount();
             long currentQueryMisses = stats.getQueryCacheMissCount();
-
             totalL2Hits += currentL2Hits;
             totalL2Misses += currentL2Misses;
             totalQueryHits += currentQueryHits;
             totalQueryMisses += currentQueryMisses;
-
             logger.info("=== Cache Stats for method: " + methodName + " ===");
             logger.info("L2 Cache Hits: " + totalL2Hits);
             logger.info("L2 Cache Misses: " + totalL2Misses);
@@ -69,7 +59,6 @@ public class CacheStatisticsInterceptor {
             logger.info("Query Cache Misses: " + totalQueryMisses);
             logger.info("Execution time: " + executionTime + " ms");
             logger.info("==============================================");
-
         } catch (Exception e) {
             logger.warning("Failed to get cache stats: " + e.getMessage());
         }

@@ -3,6 +3,7 @@ package ru.itmo.tim.dao;
 import ru.itmo.tim.DatabaseInitializier;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 public abstract class GenericDao<T> {
 
@@ -38,6 +39,12 @@ public abstract class GenericDao<T> {
     }
     public void save(EntityManager entityManager, T entity) {
         entityManager.persist(entity);
+    }
+    public T find(EntityManager em, Object id){
+        return em.find(entityClass,id);
+    }
+    public void update(EntityManager em, T entity){
+        em.merge(entity);
     }
     public void delete(T entity) {
         EntityManager em = getEntityManager();

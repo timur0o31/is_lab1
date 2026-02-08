@@ -50,6 +50,11 @@ public class OrganizationDao extends GenericDao<Organization> {
             entityManager.close();
         }
     }
+    public long countWorkers(EntityManager em, Organization organization){
+        return em.createQuery("SELECT COUNT(w) FROM Worker w WHERE w.organization = :organization", Long.class)
+                    .setParameter("organization", organization)
+                    .getSingleResult();
+    }
     public long countAll(Map<String, Object> filters) {
         var entityManager = getEntityManager();
         try {
@@ -61,6 +66,18 @@ public class OrganizationDao extends GenericDao<Organization> {
         } finally {
             entityManager.close();
         }
+    }
+
+    public int moveWorkersToNewOrganization(EntityManager em, Organization organization, Organization newOrg){
+        return em.createQuery(
+                        "UPDATE Worker w SET w.organization = :newOrg WHERE w.organization = :organization")
+                .setParameter("newOrg", newOrg)
+                .setParameter("organization", organization)
+                .executeUpdate();
+    }
+    public void delete(EntityManager em, Long id) {
+        Organization managed = em.find(Organization.class, id);
+        if (managed != null) em.remove(managed);
     }
     public Organization existByName(String fullName){
         var entityManager = getEntityManager();
