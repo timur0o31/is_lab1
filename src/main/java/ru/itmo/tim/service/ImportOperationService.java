@@ -50,8 +50,6 @@ public class ImportOperationService {
     @Inject
     private ImportFileParserFactory parserFactory;
     @Inject
-    private TxIsolation txIsolation;
-    @Inject
     private MinioService minioService;
     @Inject
     private ImportOperationLogService importOperationLogService;
@@ -69,17 +67,21 @@ public class ImportOperationService {
             conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
         });
         EntityTransaction transaction = em.getTransaction();
+        String fileName = dto.getFileName();
+        if (fileName==null || fileName.isBlank()){
+            fileName = "upload_" + System.currentTimeMillis() + ".json";
+        }
         try{
             fileData = dto.getFileStream().readAllBytes();
             try {
                 fileKey = minioService.saveFile(
                         new ByteArrayInputStream(fileData),
-                        dto.getFileName(),
+                        fileName,
                         fileData.length
                 );
             } catch (Exception e) {
                 status = Status.FAILED_INTERNAL;
-                throw new RuntimeException("MinIO недоступно: " + e.getMessage());
+                throw new RuntimeException("MinIO недоступно " + e.getMessage());
             }
             List<UploadWorker> workers = parser.parse(new ByteArrayInputStream(fileData));
             transaction.begin();
@@ -134,13 +136,13 @@ public class ImportOperationService {
                 }
             }
             fileKey=null;
-            importOperationLogService.persist(status, (long) 0, e.getMessage(), fileKey, dto.getFileName());
+            importOperationLogService.persist(status, (long) 0, e.getMessage(), fileKey, fileName);
             throw e;
         } finally{
             em.close();
         }
         status = Status.SUCCESS;
-        return importOperationLogService.persist(status,(long) ans.size(),"",fileKey,dto.getFileName());
+        return importOperationLogService.persist(status,(long) ans.size(),"",fileKey,fileName);
     }
     public List<ImportOperationResponseDto>getAllImportOperations(){
         return importOperationDao.getAllOperations().stream()
