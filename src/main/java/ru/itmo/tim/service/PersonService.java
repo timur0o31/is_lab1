@@ -54,7 +54,8 @@ public class PersonService {
             }
             this.checkUpdateUniqueConstraint(em, person, personRequestDto.getPassportId());
             personMapper.toUpdateEntity(person, personRequestDto);
-            personDao.update(person);
+            personDao.update(em,person);
+            tx.commit();
             return personMapper.toResponseDto(person);
         } catch (Exception e) {
             if (tx.isActive()) tx.rollback();
@@ -64,14 +65,25 @@ public class PersonService {
         }
     }
     public void deletePerson(Long id) {
-        Person person = personDao.find(id);
-        if (person == null) {
-            throw new IllegalArgumentException("Человек не найден");
+        EntityManager em = DatabaseInitializier.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try{
+            tx.begin();
+            Person person = personDao.find(em,id);
+            if (person == null) {
+                throw new IllegalArgumentException("Человек не найден");
+            }
+            if (personDao.hasWorkers(em,id)){
+                throw new DomainException("Нельзя удалить Person, пока на него ссылаются workers");
+            }
+            personDao.delete(em,person);
+            tx.commit();
+        }catch(Exception e){
+            if (tx.isActive()) tx.rollback();
+            throw e;
+        } finally {
+            em.close();
         }
-        if (personDao.hasWorkers(id)){
-            throw new DomainException("Нельзя удалить Person, пока на него ссылаются workers");
-        }
-        personDao.delete(person);
     }
     public PersonResponseDto getPerson(Long id) {
         return personMapper.toResponseDto(this.getPersonEntity(id));

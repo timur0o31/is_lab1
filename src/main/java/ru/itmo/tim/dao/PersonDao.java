@@ -43,16 +43,11 @@ public class PersonDao extends GenericDao<Person> {
             entityManager.close();
         }
     }
-    public boolean hasWorkers(long personId){
-        var entityManager = getEntityManager();
-        try {
-            Long count = entityManager.createQuery(
+    public boolean hasWorkers(EntityManager em,long personId){
+            Long count = em.createQuery(
                             "SELECT COUNT(w) FROM Worker w WHERE w.person.id=:pid", Long.class)
                     .setParameter("pid", personId).getSingleResult();
             return count > 0;
-        } finally {
-            entityManager.close();
-        }
     }
     public Person existByPassportId(String passportId){
         var entityManager = getEntityManager();

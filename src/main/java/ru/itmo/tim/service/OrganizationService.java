@@ -55,6 +55,7 @@ public class OrganizationService {
             this.checkUpdateUniqueConstraint(em,organization, dto.getFullName());
             organizationMapper.toUpdateEntity(dto, organization);
             organizationDao.update(em, organization);
+            tx.commit();
             return organizationMapper.toResponseDto(organization);
         }catch(Exception e){
             if (tx.isActive()) tx.rollback();
@@ -73,12 +74,12 @@ public class OrganizationService {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            Organization organization = organizationDao.find(id);
+            Organization organization = organizationDao.find(em,id);
             if (organization == null) {
                 throw new IllegalArgumentException("Organization not found");
             }
             if (transferToId != null) {
-                Organization newOrganization = organizationDao.find(transferToId);
+                Organization newOrganization = organizationDao.find(em,transferToId);
                 if (newOrganization == null) {
                     throw new IllegalArgumentException("Organization not found");
                 }

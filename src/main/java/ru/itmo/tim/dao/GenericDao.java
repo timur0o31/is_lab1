@@ -46,6 +46,9 @@ public abstract class GenericDao<T> {
     public void update(EntityManager em, T entity){
         em.merge(entity);
     }
+    public void delete(EntityManager em, T entity){
+        em.remove(entity);
+    }
     public void delete(T entity) {
         EntityManager em = getEntityManager();
         try {
