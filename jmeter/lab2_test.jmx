@@ -33,8 +33,8 @@
         </collectionProp>
       </HeaderManager>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Random">
-        <intProp name="ThreadGroup.num_threads">2</intProp>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Random" enabled="false">
+        <intProp name="ThreadGroup.num_threads">10</intProp>
         <intProp name="ThreadGroup.ramp_time">0</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
@@ -44,7 +44,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable" enabled="false">
+        <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Variable">
           <stringProp name="variableName">randomVar</stringProp>
           <stringProp name="outputFormat"></stringProp>
           <stringProp name="minimumValue">1</stringProp>
@@ -53,7 +53,7 @@
           <boolProp name="perThread">false</boolProp>
         </RandomVariableConfig>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create random person" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create random person" enabled="true">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -87,7 +87,7 @@
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create random organization" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create random organization" enabled="true">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -124,7 +124,7 @@
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create random worker" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create random worker" enabled="true">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -154,14 +154,14 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="worker id extractor" enabled="true">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="worker id extractor">
             <stringProp name="JSONPostProcessor.referenceNames">randomWorkerId</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.id</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit random person" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit random person" enabled="true">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons/${randomPersonId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
@@ -188,7 +188,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit random organization" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit random organization">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations/${randomOrgId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
@@ -218,7 +218,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="edit random worker" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="edit random worker">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers/${randomWorkerId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">PUT</stringProp>
@@ -248,7 +248,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete random worker" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete random worker">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers/${randomWorkerId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -259,7 +259,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete random person" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete random person">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons/${randomPersonId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -270,7 +270,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="delete random organization" enabled="false">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="delete random organization">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations/${randomOrgId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
@@ -293,7 +293,7 @@
           <stringProp name="variableNames">filename</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Import different json">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Import different json" enabled="false">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/imports</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -315,9 +315,9 @@
         </HTTPSamplerProxy>
         <hashTree/>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Same" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Same">
         <intProp name="ThreadGroup.num_threads">2</intProp>
-        <intProp name="ThreadGroup.ramp_time">1</intProp>
+        <intProp name="ThreadGroup.ramp_time">0</intProp>
         <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller">
@@ -326,7 +326,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create same person" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create same person">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -344,7 +344,7 @@
     &quot;y&quot;: 45,&#xd;
     &quot;z&quot;: 30&#xd;
   },&#xd;
-  &quot;passportId&quot;: &quot;AB12345&quot;,&#xd;
+  &quot;passportId&quot;: &quot;AB12345SAME&quot;,&#xd;
   &quot;nationality&quot;: &quot;GERMANY&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -353,8 +353,8 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get same person" enabled="true">
-          <stringProp name="HTTPSampler.path">${BASE_PATH}/people/?name=SAME_PERSON</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get same person">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons/passport/AB12345SAME</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -364,17 +364,17 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Person id extractor" enabled="true">
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Person id extractor">
             <stringProp name="JSONPostProcessor.referenceNames">samePersonId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].id</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.id</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="create same organization" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="create same organization">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <stringProp name="HTTPSampler.method">POST</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -388,7 +388,7 @@
   },&#xd;
   &quot;annualTurnover&quot;: 1000000.5,&#xd;
   &quot;employeesCount&quot;: 51,&#xd;
-  &quot;fullName&quot;: &quot;yandex&quot;,&#xd;
+  &quot;fullName&quot;: &quot;yandex_same_crud&quot;,&#xd;
   &quot;rating&quot;: 4.5,&#xd;
   &quot;postalAddress&quot;: {&#xd;
     &quot;street&quot;: &quot;Абонентский ящик 5&quot;,&#xd;
@@ -401,8 +401,8 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get same organization" enabled="true">
-          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get same organization">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations/fullName/yandex_same_crud</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -411,8 +411,15 @@
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
         </HTTPSamplerProxy>
-        <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create same worker" enabled="true">
+        <hashTree>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Organization id Extractor">
+            <stringProp name="JSONPostProcessor.referenceNames">sameOrganizationId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.id</stringProp>
+            <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
+          </JSONPostProcessor>
+          <hashTree/>
+        </hashTree>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Create same worker">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>
@@ -433,8 +440,8 @@
   &quot;startDate&quot;: &quot;2026-01-12T17:21:00&quot;,&#xd;
   &quot;endDate&quot;: &quot;2026-01-21&quot;,&#xd;
   &quot;rating&quot;: 124,&#xd;
-  &quot;personId&quot;: ${randomPersonId},&#xd;
-  &quot;organizationId&quot;: ${randomOrgId},&#xd;
+  &quot;personId&quot;: ${samePersonId},&#xd;
+  &quot;organizationId&quot;: ${sameOrganizationId}&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -442,7 +449,7 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get same movie" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Get same worker">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">GET</stringProp>
@@ -453,17 +460,17 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree>
-          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Movie id extractor" enabled="true">
-            <stringProp name="JSONPostProcessor.referenceNames">sameMovieId</stringProp>
-            <stringProp name="JSONPostProcessor.jsonPathExprs">$.data[0].id</stringProp>
+          <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="Worker id extractor">
+            <stringProp name="JSONPostProcessor.referenceNames">sameWorkerId</stringProp>
+            <stringProp name="JSONPostProcessor.jsonPathExprs">$.id</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers">1</stringProp>
           </JSONPostProcessor>
           <hashTree/>
         </hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit same person" enabled="true">
-          <stringProp name="HTTPSampler.path">${BASE_PATH}/people/${samePersonId}</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit same person">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons/${samePersonId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">PATCH</stringProp>
+          <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -478,7 +485,7 @@
     &quot;y&quot;: 45,&#xd;
     &quot;z&quot;: 30&#xd;
   },&#xd;
-  &quot;passportId&quot;: &quot;NEW_AB12345&quot;,&#xd;
+  &quot;passportId&quot;: &quot;NEWAB12345SAME&quot;,&#xd;
   &quot;nationality&quot;: &quot;GERMANY&quot;&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
@@ -487,9 +494,10 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit same organization" enabled="true">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit same organization">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations/${sameOrganizationId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -503,7 +511,7 @@
   },&#xd;
   &quot;annualTurnover&quot;: 1000000.5,&#xd;
   &quot;employeesCount&quot;: 51,&#xd;
-  &quot;fullName&quot;: &quot;yandex_update&quot;,&#xd;
+  &quot;fullName&quot;: &quot;yandex_same_update&quot;,&#xd;
   &quot;rating&quot;: 4.5,&#xd;
   &quot;postalAddress&quot;: {&#xd;
     &quot;street&quot;: &quot;Абонентский ящик 5&quot;,&#xd;
@@ -516,10 +524,10 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit same worker" enabled="true">
-          <stringProp name="HTTPSampler.path">${BASE_PATH}/movies/${sameMovieId}</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Edit same worker">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers/${sameWorkerId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-          <stringProp name="HTTPSampler.method">PATCH</stringProp>
+          <stringProp name="HTTPSampler.method">PUT</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
           <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
@@ -537,8 +545,8 @@
   &quot;startDate&quot;: &quot;2026-01-12T17:21:00&quot;,&#xd;
   &quot;endDate&quot;: &quot;2026-01-21&quot;,&#xd;
   &quot;rating&quot;: 124,&#xd;
-  &quot;personId&quot;: ${randomPersonId},&#xd;
-  &quot;organizationId&quot;: ${randomOrgId},&#xd;
+  &quot;personId&quot;: ${samePersonId},&#xd;
+  &quot;organizationId&quot;: ${sameOrganizationId},&#xd;
 }</stringProp>
                 <stringProp name="Argument.metadata">=</stringProp>
               </elementProp>
@@ -546,8 +554,8 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete same worker" enabled="true">
-          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers/${randomWorkerId}</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete same person">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons/${samePersonId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -557,8 +565,8 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete same person" enabled="true">
-          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/persons/${randomPersonId}</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete same organization">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations/${sameOrganizationId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -568,8 +576,8 @@
           </elementProp>
         </HTTPSamplerProxy>
         <hashTree/>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete same organization" enabled="true">
-          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/organizations/${randomOrgId}</stringProp>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Delete same worker">
+          <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/workers/${sameWorkerId}</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">DELETE</stringProp>
           <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
@@ -591,7 +599,7 @@
         </elementProp>
       </ThreadGroup>
       <hashTree>
-        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Import same json">
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="Import same json" enabled="true">
           <stringProp name="HTTPSampler.path">is_lab1-1.0-SNAPSHOT/api/imports</stringProp>
           <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
           <stringProp name="HTTPSampler.method">POST</stringProp>

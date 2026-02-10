@@ -1,6 +1,6 @@
 [
   {
-    "name": "Федор Петров",
+    "name": "Федор gtgtr",
     "coordinates": {
       "x": 120,
       "y": -100
@@ -12,7 +12,7 @@
       },
       "annualTurnover": 1000000.5,
       "employeesCount": 51,
-      "fullName": "yandex_s",
+      "fullName": "yandex_s_new",
       "rating": 4.5,
       "postalAddress": {
         "street": "Абонентский ящик 5",
@@ -30,7 +30,7 @@
         "y": 20,
         "z": 30
       },
-      "passportId": "AB1234567123123",
+      "passportId": "AB1234567123123NEWEWE",
       "nationality": "GERMANY"
     },
     "startDate": "2025-02-01T09:00:00",

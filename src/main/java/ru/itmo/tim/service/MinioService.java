@@ -12,9 +12,9 @@ public class MinioService {
 
     private final String BUCKET = "import-files";
 
-    public String saveFile(InputStream inputStream, String fileName, long fileSize) throws Exception {
+    public String uploadTemp(InputStream inputStream, String fileName, long fileSize) throws Exception {
         byte[] data = inputStream.readAllBytes();
-        String fileKey = System.currentTimeMillis() + "_" + fileName;
+        String fileKey = "temp_"+System.currentTimeMillis() + "_" + fileName;
 
         try {
             boolean found = minioConfig.getClient().bucketExists(
@@ -45,7 +45,27 @@ public class MinioService {
         );
         return fileKey;
     }
-
+    public void saveFile(String tempKey, String finalKey) throws Exception{
+        try {
+            boolean found = minioConfig.getClient().bucketExists(
+                    BucketExistsArgs.builder().bucket(BUCKET).build()
+            );
+            if (!found) {
+                minioConfig.getClient().makeBucket(
+                        MakeBucketArgs.builder().bucket(BUCKET).build()
+                );
+            }
+        } catch (Exception e) {
+        }
+        minioConfig.getClient().copyObject(
+                CopyObjectArgs.builder()
+                        .bucket(BUCKET)
+                        .object(finalKey)
+                        .source(CopySource.builder().bucket(BUCKET).object(tempKey).build())
+                        .build()
+        );
+        deleteFile(tempKey);
+    }
     public InputStream getFile(String fileKey) throws Exception {
         return minioConfig.getClient().getObject(
                 GetObjectArgs.builder()

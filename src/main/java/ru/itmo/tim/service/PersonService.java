@@ -31,6 +31,7 @@ public class PersonService {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
+            //TxIsolation.setLocal(em, TxIsolation.Level.REPEATABLE_READ);
             this.checkCreateUniqueConstraint(em,personRequestDto.getPassportId());
             Person person = personMapper.toCreateEntity(personRequestDto);
             personDao.save(em,person);
@@ -48,6 +49,7 @@ public class PersonService {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
+            //TxIsolation.setLocal(em, TxIsolation.Level.REPEATABLE_READ);
             Person person = personDao.find(em,id);
             if (person == null) {
                 throw new IllegalArgumentException("Person not found");

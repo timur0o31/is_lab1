@@ -30,6 +30,7 @@ public class OrganizationService {
         EntityTransaction tx = em.getTransaction();
         try{
             tx.begin();
+            //TxIsolation.setLocal(em, TxIsolation.Level.REPEATABLE_READ);
             this.checkConstraint(em,dto.getFullName());
             Organization organization = organizationMapper.toCreateEntity(dto);
             organizationDao.save(em,organization);
@@ -48,6 +49,7 @@ public class OrganizationService {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
+            //TxIsolation.setLocal(em, TxIsolation.Level.REPEATABLE_READ);
             Organization organization = organizationDao.find(em,id);
             if (organization == null) {
                 throw new IllegalArgumentException("Organization not found");

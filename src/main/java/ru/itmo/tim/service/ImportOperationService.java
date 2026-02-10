@@ -18,11 +18,9 @@ import ru.itmo.tim.parser.WorkerImportFileParser;
 import ru.itmo.tim.parser.upload.UploadWorker;
 import ru.itmo.tim.requestDto.ImportOperationRequestDto;
 import ru.itmo.tim.responseDto.ImportOperationResponseDto;
-import ru.itmo.tim.utils.TxIsolation;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
-import javax.persistence.Entity;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import java.io.ByteArrayInputStream;
@@ -60,6 +58,7 @@ public class ImportOperationService {
         List<Worker> ans = new ArrayList<>();
         byte[] fileData;
         String fileKey=null;
+        String tempKey=null;
         Status status = Status.FAILED;
         EntityManager em = DatabaseInitializier.getEntityManager();
         Session session = em.unwrap(Session.class);
@@ -69,12 +68,13 @@ public class ImportOperationService {
         EntityTransaction transaction = em.getTransaction();
         String fileName = dto.getFileName();
         if (fileName==null || fileName.isBlank()){
-            fileName = "upload_" + System.currentTimeMillis() + ".json";
+            fileName = "_" + System.currentTimeMillis() + ".json";
         }
+        String finalKeyPlanned = "import_" + System.currentTimeMillis() + "_" + fileName;
         try{
             fileData = dto.getFileStream().readAllBytes();
             try {
-                fileKey = minioService.saveFile(
+                tempKey = minioService.uploadTemp(
                         new ByteArrayInputStream(fileData),
                         fileName,
                         fileData.length
@@ -126,17 +126,23 @@ public class ImportOperationService {
                 workerDao.save(em,worker);
             }
             transaction.commit();
+            try{
+                minioService.saveFile(tempKey, finalKeyPlanned);
+                fileKey = finalKeyPlanned;
+            } catch( Exception e){
+                status = Status.FAILED_INTERNAL;
+                throw new RuntimeException("Импорт в БД выполнен, но не удалось утвердить файл в MinIO: " + e.getMessage());
+            }
         }catch(Exception e){
             if (transaction.isActive()) transaction.rollback();
-            if (fileKey!=null) {
+            if (tempKey != null && fileKey==null) {
                 try {
-                    minioService.deleteFile(fileKey);
+                    minioService.deleteFile(tempKey);
                 } catch (Exception deleteEx) {
                     System.out.println(deleteEx.getMessage());
                 }
             }
-            fileKey=null;
-            importOperationLogService.persist(status, (long) 0, e.getMessage(), fileKey, fileName);
+            importOperationLogService.persist(status, (long) 0, e.getMessage(), null, fileName);
             throw e;
         } finally{
             em.close();
