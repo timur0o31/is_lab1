@@ -3,6 +3,9 @@ package ru.itmo.tim.mapper;
 import ru.itmo.tim.entity.ImportOperation;
 import ru.itmo.tim.responseDto.ImportOperationResponseDto;
 
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class ImportOperationMapper {
     public ImportOperationMapper() {}
     public ImportOperationResponseDto toResponseDto(ImportOperation importOperation) {

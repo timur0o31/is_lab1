@@ -3,9 +3,10 @@ package ru.itmo.tim.service;
 import io.minio.*;
 import ru.itmo.tim.MinioConfig;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.io.InputStream;
-
+@ApplicationScoped
 public class MinioService {
     @Inject
     private MinioConfig minioConfig;
@@ -14,7 +15,7 @@ public class MinioService {
 
     public String uploadTemp(InputStream inputStream, String fileName, long fileSize) throws Exception {
         byte[] data = inputStream.readAllBytes();
-        String fileKey = "temp_"+System.currentTimeMillis() + "_" + fileName;
+        String fileKey = "temp_"+java.util.UUID.randomUUID().toString() + "_" + fileName;
 
         try {
             boolean found = minioConfig.getClient().bucketExists(
@@ -66,6 +67,7 @@ public class MinioService {
         );
         deleteFile(tempKey);
     }
+
     public InputStream getFile(String fileKey) throws Exception {
         return minioConfig.getClient().getObject(
                 GetObjectArgs.builder()

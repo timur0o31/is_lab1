@@ -2,6 +2,9 @@ package ru.itmo.tim.utils;
 
 import ru.itmo.tim.exception.FieldValidationException;
 
+import javax.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
 public class ParserForFloatValue {
     public static Float safeFloat(Float value, String field){
         if (value == null){

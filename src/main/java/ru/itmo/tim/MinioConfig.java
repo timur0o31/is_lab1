@@ -6,17 +6,17 @@ import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class MinioConfig {
+public class    MinioConfig {
 
     private MinioClient minioClient;
 
     @PostConstruct
     void init() {
-        System.out.println("minio_login=" + System.getProperty("minio_login"));
-        System.out.println("minio_password=" + System.getProperty("minio_password"));
+        System.out.println("minio_login=" + System.getenv("minio_login"));
+        System.out.println("minio_password=" + System.getenv("minio_password"));
         this.minioClient = MinioClient.builder()
-                .endpoint(System.getProperty("minio_endpoint"))
-                .credentials(System.getProperty("minio_login"), System.getProperty("minio_password"))
+                .endpoint(System.getenv("minio_endpoint"))
+                .credentials(System.getenv("minio_login"), System.getenv("minio_password"))
                 .build();
     }
 

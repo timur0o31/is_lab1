@@ -6,9 +6,10 @@ import ru.itmo.tim.enums.Status;
 import ru.itmo.tim.mapper.ImportOperationMapper;
 import ru.itmo.tim.responseDto.ImportOperationResponseDto;
 
+import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
-
+@ApplicationScoped
 public class ImportOperationLogService {
     @Inject
     private ImportOperationDao dao;

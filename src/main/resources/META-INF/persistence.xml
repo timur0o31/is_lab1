@@ -21,13 +21,9 @@
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.format_sql" value="true"/>
 
-            <property name="jakarta.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
+            <property name="javax.persistence.sharedCache.mode" value="ENABLE_SELECTIVE"/>
             <property name="hibernate.cache.use_second_level_cache" value="true"/>
             <property name="hibernate.cache.use_query_cache" value="true"/>
-            <property name="hibernate.cache.region.factory_class"
-                      value="org.hibernate.cache.infinispan.InfinispanRegionFactory"/>
-            <property name="hibernate.javax.cache.provider"
-                      value="org.infinispan.jcache.embedded.JCachingProvider"/>
             <property name="hibernate.cache.infinispan.statistics" value="true"/>
             <property name="hibernate.generate_statistics" value="true"/>
             <property name="hibernate.cache.infinispan.entity.eviction.strategy" value="LRU"/>

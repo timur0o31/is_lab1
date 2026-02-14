@@ -52,8 +52,8 @@ public class DatabaseInitializier implements ServletContextListener {
     private static void initDataSource() {
         try {
             logger.info("Initializing Druid DataSource...");
-            String user = System.getProperty("db_user");
-            String pass = System.getProperty("db_password");
+            String user = System.getenv("db_user");
+            String pass = System.getenv("db_password");
             dataSource = new DruidDataSource();
             dataSource.setDriverClassName("org.postgresql.Driver");
             dataSource.setUrl("jdbc:postgresql://localhost:5432/studs");
@@ -101,7 +101,12 @@ public class DatabaseInitializier implements ServletContextListener {
 
             properties.put("hibernate.cache.use_second_level_cache", "true");
             properties.put("hibernate.cache.use_query_cache", "true");
-
+            properties.put("hibernate.cache.infinispan.statistics","true");
+            properties.put("javax.persistence.sharedCache.mode", "ENABLE_SELECTIVE");
+            properties.put("hibernate.cache.infinispan.entity.eviction.strategy", "LRU");
+            properties.put("hibernate.cache.infinispan.entity.eviction.max_entries", "10000");
+            properties.put("hibernate.cache.infinispan.entity.expiration.lifespan", "600000");
+            properties.put("hibernate.cache.infinispan.entity.expiration.max_idle", "300000");
             entityManagerFactory = Persistence.createEntityManagerFactory("lab1", properties);
             logger.info("EntityManagerFactory initialized successfully");
 

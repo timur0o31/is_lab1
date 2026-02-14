@@ -67,10 +67,7 @@ public class ImportOperationService {
         });
         EntityTransaction transaction = em.getTransaction();
         String fileName = dto.getFileName();
-        if (fileName==null || fileName.isBlank()){
-            fileName = "_" + System.currentTimeMillis() + ".json";
-        }
-        String finalKeyPlanned = "import_" + System.currentTimeMillis() + "_" + fileName;
+        String finalKeyPlanned = "import_" + java.util.UUID.randomUUID().toString() + "_" + fileName;
         try{
             fileData = dto.getFileStream().readAllBytes();
             try {
@@ -106,7 +103,7 @@ public class ImportOperationService {
                     Organization organizationReference = organizationDao.existByName(em,upload.getOrganization().getFullName());
                     if (organizationReference!=null){
                         String errorMessage = "Нарушение ограничения уникальности по fullName. Для worker с name:"+worker.getName()+"нельзя создать organization с таким же fullName:"+upload.getOrganization().getFullName();
-                        throw new UniqueViolationException(errorMessage); //isSameOrganization(organization, organizationReference);
+                        throw new UniqueViolationException(errorMessage);
                     }
                     else{
                         if (upload.getOrganization().getOfficialAddress() != null) {
